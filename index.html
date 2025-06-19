@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Брестский научно-технологический парк</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50">
+<nav class="gradient-bg text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">БНТП</h1>
+        <div class="space-x-4">
+            <a href="/login" class="bg-white text-purple-600 px-4 py-2 rounded hover:bg-gray-100">Войти</a>
+            <a href="/register" class="border border-white px-4 py-2 rounded hover:bg-white hover:text-purple-600">Регистрация</a>
+        </div>
+    </div>
+</nav>
+
+<header class="gradient-bg text-white py-20">
+    <div class="container mx-auto text-center">
+        <h1 class="text-5xl font-bold mb-6">Брестский научно-технологический парк</h1>
+        <p class="text-xl mb-8">Крупнейший инновационный центр Брестского региона</p>
+        <button class="bg-white text-purple-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition">
+            Стать резидентом
+        </button>
+    </div>
+</header>
+
+<section class="py-16">
+    <div class="container mx-auto">
+        <h2 class="text-3xl font-bold text-center mb-12">Наши услуги</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="glass-effect p-6 rounded-lg border border-gray-200">
+                <h3 class="text-xl font-semibold mb-4">Аренда конференц-залов</h3>
+                <p class="text-gray-600 mb-4">Современные залы для проведения мероприятий</p>
+                <a href="/booking" class="text-purple-600 hover:underline">Забронировать →</a>
+            </div>
+            <div class="glass-effect p-6 rounded-lg border border-gray-200">
+                <h3 class="text-xl font-semibold mb-4">Аренда офисов</h3>
+                <p class="text-gray-600 mb-4">Готовая инфраструктура для вашего бизнеса</p>
+                <a href="/booking" class="text-purple-600 hover:underline">Забронировать →</a>
+            </div>
+            <div class="glass-effect p-6 rounded-lg border border-gray-200">
+                <h3 class="text-xl font-semibold mb-4">Консалтинг</h3>
+                <p class="text-gray-600 mb-4">Профессиональное сопровождение бизнеса</p>
+                <a href="#" class="text-purple-600 hover:underline">Подробнее →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-gray-100 py-16">
+    <div class="container mx-auto">
+        <h2 class="text-3xl font-bold text-center mb-12">Новости и объявления</h2>
+        <div id="announcements" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Announcements will be loaded here -->
+        </div>
+    </div>
+</section>
+
+<script>
+    // Load announcements
+    fetch('/api/announcements')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('announcements');
+            data.forEach(announcement => {
+                const div = document.createElement('div');
+                div.className = 'bg-white p-6 rounded-lg shadow';
+                div.innerHTML = `
+                        <h3 class="text-xl font-semibold mb-2">${announcement.title}</h3>
+                        <p class="text-gray-600 mb-4">${announcement.content.substring(0, 150)}...</p>
+                        <span class="text-sm text-purple-600">${announcement.type}</span>
+                    `;
+                container.appendChild(div);
+            });
+        });
+</script>
+</body>
+</html>

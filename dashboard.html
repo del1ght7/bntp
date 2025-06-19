@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления - БНТП</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-gray-50">
+<!-- Header -->
+<nav class="gradient-bg text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">БНТП - Панель управления</h1>
+        <div class="flex items-center space-x-4">
+            <span id="userInfo" class="text-sm">Загрузка...</span>
+            <button onclick="logout()" class="bg-red-500 px-3 py-1 rounded text-sm hover:bg-red-600">Выйти</button>
+        </div>
+    </div>
+</nav>
+
+<div class="container mx-auto px-4 py-6">
+    <!-- Tabs -->
+    <div class="bg-white rounded-lg shadow mb-6">
+        <div class="flex border-b" id="tabButtons">
+            <!-- Tabs will be populated by JS -->
+        </div>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="overview" class="tab-content active">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-gray-700">Всего пользователей</h3>
+                <p class="text-3xl font-bold text-purple-600" id="totalUsers">-</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-gray-700">Активные брони</h3>
+                <p class="text-3xl font-bold text-blue-600" id="activeBookings">-</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-gray-700">Объявления</h3>
+                <p class="text-3xl font-bold text-green-600" id="totalAnnouncements">-</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold text-gray-700">Ожидают одобрения</h3>
+                <p class="text-3xl font-bold text-orange-600" id="pendingApprovals">-</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bookings Tab -->
+    <div id="bookings" class="tab-content">
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Управление бронированием</h2>
+                <button onclick="openBookingModal()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+                    Новая бронь
+                </button>
+            </div>
+            <div id="bookingsList">
+                <!-- Bookings will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Announcements Tab -->
+    <div id="announcements" class="tab-content">
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Управление объявлениями</h2>
+                <button onclick="openAnnouncementModal()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+                    Новое объявление
+                </button>
+            </div>
+            <div id="announcementsList">
+                <!-- Announcements will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Tab -->
+    <div id="admin" class="tab-content">
+        <div class="space-y-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold mb-6">Пользователи ожидающие одобрения</h2>
+                <div id="pendingUsersList">
+                    <!-- Pending users will be loaded here -->
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold mb-6">Брони ожидающие одобрения</h2>
+                <div id="pendingBookingsList">
+                    <!-- Pending bookings will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-8 rounded-lg max-w-md w-full mx-4">
+        <h3 class="text-xl font-bold mb-4">Новая бронь</h3>
+        <form id="bookingForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Тип помещения</label>
+                <select name="roomType" required class="w-full p-2 border rounded">
+                    <option value="CONFERENCE_HALL">Конференц-зал</option>
+                    <option value="OFFICE">Офис</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Название помещения</label>
+                <input type="text" name="roomName" required class="w-full p-2 border rounded">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Начало</label>
+                <input type="datetime-local" name="startTime" required class="w-full p-2 border rounded">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Окончание</label>
+                <input type="datetime-local" name="endTime" required class="w-full p-2 border rounded">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Цель</label>
+                <textarea name="purpose" required class="w-full p-2 border rounded" rows="3"></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Контактная информация</label>
+                <input type="text" name="contactInfo" required class="w-full p-2 border rounded">
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="closeBookingModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Отмена</button>
+                <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Создать</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Announcement Modal -->
+<div id="announcementModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-8 rounded-lg max-w-md w-full mx-4">
+        <h3 class="text-xl font-bold mb-4">Новое объявление</h3>
+        <form id="announcementForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Заголовок</label>
+                <input type="text" name="title" required class="w-full p-2 border rounded">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Тип</label>
+                <select name="type" required class="w-full p-2 border rounded">
+                    <option value="NEWS">Новости</option>
+                    <option value="VACANCY">Вакансия</option>
+                    <option value="EVENT">Мероприятие</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Содержание</label>
+                <textarea name="content" required class="w-full p-2 border rounded" rows="4"></textarea>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="closeAnnouncementModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Отмена</button>
+                <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Создать</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Simulate user data - in real app this would come from auth
+    const currentUser = {
+        username: localStorage.getItem('username') || 'admin',
+        role: localStorage.getItem('role') || 'ADMIN'
+    };
+
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeTabs();
+        loadDashboardData();
+        document.getElementById('userInfo').textContent = `${currentUser.username} (${currentUser.role})`;
+    });
+
+    function initializeTabs() {
+        const tabs = [
+            { id: 'overview', title: 'Обзор', roles: ['ADMIN', 'USER', 'RESIDENT', 'TECHPARK'] },
+            { id: 'bookings', title: 'Бронирование', roles: ['ADMIN', 'USER', 'RESIDENT', 'TECHPARK'] },
+            { id: 'announcements', title: 'Объявления', roles: ['ADMIN', 'RESIDENT', 'TECHPARK'] },
+            { id: 'admin', title: 'Администрирование', roles: ['ADMIN'] }
+        ];
+
+        const tabButtons = document.getElementById('tabButtons');
+        tabs.forEach(tab => {
+            if (tab.roles.includes(currentUser.role)) {
+                const button = document.createElement('button');
+                button.className = 'px-6 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent';
+                button.textContent = tab.title;
+                button.onclick = () => switchTab(tab.id);
+                if (tab.id === 'overview') button.className += ' border-purple-500 text-purple-600';
+                tabButtons.appendChild(button);
+            }
+        });
+    }
+
+    function switchTab(tabId) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // Show selected tab
+        document.getElementById(tabId).classList.add('active');
+
+        // Update button styles
+        document.querySelectorAll('#tabButtons button').forEach(btn => {
+            btn.className = 'px-6 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent';
+        });
+        event.target.className += ' border-purple-500 text-purple-600';
+
+        // Load tab-specific data
+        loadTabData(tabId);
+    }
+
+    function loadDashboardData() {
+        // Simulate API calls - replace with real endpoints
+        document.getElementById('totalUsers').textContent = '47';
+        document.getElementById('activeBookings').textContent = '12';
+        document.getElementById('totalAnnouncements').textContent = '8';
+        document.getElementById('pendingApprovals').textContent = '3';
+
+        loadTabData('overview');
+    }
+
+    function loadTabData(tabId) {
+        switch(tabId) {
+            case 'bookings':
+                loadBookings();
+                break;
+            case 'announcements':
+                loadAnnouncements();
+                break;
+            case 'admin':
+                if (currentUser.role === 'ADMIN') {
+                    loadPendingUsers();
+                    loadPendingBookings();
+                }
+                break;
+        }
+    }
+
+    function loadBookings() {
+        const bookingsList = document.getElementById('bookingsList');
+        // Simulate bookings data
+        const bookings = [
+            { id: 1, roomName: 'Конференц-зал А', startTime: '2024-12-15 10:00', status: 'APPROVED' },
+            { id: 2, roomName: 'Офис 201', startTime: '2024-12-16 14:00', status: 'PENDING' }
+        ];
+
+        bookingsList.innerHTML = bookings.map(booking => `
+                <div class="border-b py-4 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-semibold">${booking.roomName}</h4>
+                        <p class="text-sm text-gray-600">${booking.startTime}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2 py-1 text-xs rounded ${booking.status === 'APPROVED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                            ${booking.status}
+                        </span>
+                        ${currentUser.role === 'ADMIN' && booking.status === 'PENDING' ?
+            `<button onclick="approveBooking(${booking.id})" class="text-green-600 hover:bg-green-50 px-2 py-1 rounded text-sm">Одобрить</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    function loadAnnouncements() {
+        fetch('/api/announcements')
+            .then(response => response.json())
+            .then(announcements => {
+                const announcementsList = document.getElementById('announcementsList');
+                announcementsList.innerHTML = announcements.map(ann => `
+                        <div class="border-b py-4">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold">${ann.title}</h4>
+                                    <p class="text-sm text-gray-600 mt-1">${ann.content.substring(0, 100)}...</p>
+                                    <div class="flex items-center mt-2 space-x-2">
+                                        <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">${ann.type}</span>
+                                        <span class="text-xs text-gray-500">${new Date(ann.createdAt).toLocaleDateString()}</span>
+                                    </div>
+                                </div>
+                                ${currentUser.role === 'ADMIN' && !ann.published ?
+                    `<button onclick="publishAnnouncement(${ann.id})" class="ml-4 text-green-600 hover:bg-green-50 px-3 py-1 rounded text-sm">Опубликовать</button>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+            })
+            .catch(() => {
+                document.getElementById('announcementsList').innerHTML = '<p class="text-gray-500">Ошибка загрузки объявлений</p>';
+            });
+    }
+
+    function loadPendingUsers() {
+        // Simulate pending users
+        const pendingUsers = [
+            { id: 3, username: 'newuser1', email: 'user@example.com', company: 'Новая компания' }
+        ];
+
+        document.getElementById('pendingUsersList').innerHTML = pendingUsers.length ?
+            pendingUsers.map(user => `
+                    <div class="border-b py-4 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-semibold">${user.username}</h4>
+                            <p class="text-sm text-gray-600">${user.email} - ${user.company}</p>
+                        </div>
+                        <button onclick="approveUser(${user.id})" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
+                            Одобрить
+                        </button>
+                    </div>
+                `).join('') : '<p class="text-gray-500">Нет пользователей ожидающих одобрения</p>';
+    }
+
+    function loadPendingBookings() {
+        document.getElementById('pendingBookingsList').innerHTML = '<p class="text-gray-500">Нет броней ожидающих одобрения</p>';
+    }
+
+    // Modal functions
+    function openBookingModal() {
+        document.getElementById('bookingModal').classList.remove('hidden');
+    }
+
+    function closeBookingModal() {
+        document.getElementById('bookingModal').classList.add('hidden');
+        document.getElementById('bookingForm').reset();
+    }
+
+    function openAnnouncementModal() {
+        document.getElementById('announcementModal').classList.remove('hidden');
+    }
+
+    function closeAnnouncementModal() {
+        document.getElementById('announcementModal').classList.add('hidden');
+        document.getElementById('announcementForm').reset();
+    }
+
+    // Form handlers
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        fetch('/api/booking', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(() => {
+                closeBookingModal();
+                loadBookings();
+                alert('Бронь создана успешно!');
+            })
+            .catch(() => alert('Ошибка создания брони'));
+    });
+
+    document.getElementById('announcementForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        fetch('/api/announcement', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(() => {
+                closeAnnouncementModal();
+                loadAnnouncements();
+                alert('Объявление создано успешно!');
+            })
+            .catch(() => alert('Ошибка создания объявления'));
+    });
+
+    // Admin functions
+    function approveUser(userId) {
+        fetch(`/api/admin/approve-user/${userId}`, { method: 'POST' })
+            .then(() => {
+                loadPendingUsers();
+                alert('Пользователь одобрен!');
+            })
+            .catch(() => alert('Ошибка одобрения'));
+    }
+
+    function approveBooking(bookingId) {
+        fetch(`/api/admin/approve-booking/${bookingId}`, { method: 'POST' })
+            .then(() => {
+                loadBookings();
+                alert('Бронь одобрена!');
+            })
+            .catch(() => alert('Ошибка одобрения'));
+    }
+
+    function publishAnnouncement(announcementId) {
+        fetch(`/api/admin/publish-announcement/${announcementId}`, { method: 'POST' })
+            .then(() => {
+                loadAnnouncements();
+                alert('Объявление опубликовано!');
+            })
+            .catch(() => alert('Ошибка публикации'));
+    }
+
+    function logout() {
+        localStorage.clear();
+        window.location.href = '/';
+    }
+</script>
+</body>
+</html>
