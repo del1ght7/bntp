@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления - БНТП</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .sidebar-collapsed {
+            width: 80px;
+        }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .activity-item {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        .welcome-banner {
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0MCIgaGVpZ2h0PSIzMjAiIHZpZXdCb3g9IjAgMCAxNDQwIDMyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTAgMTYwTDQ4IDEzOC43QzQzOC43IDExNy4zIDIyMi43IDc0LjcgMzIwIDc0LjdDNDE3LjMgNzQuNyA0MDAuMyAxMTcuMyA0ODAgMTM4LjdDNTU5LjcgMTYwIDYzOS4zIDEzOC43IDcyMCAxMTcuM0M4MDAuNyA5NiA4ODAuNyA3NC43IDk2MCA5NkMxMDM5LjMgMTE3LjMgMTExOS4zIDE4MS4zIDEyMDAgMjAyLjdDMTI4MC43IDIyNCAxMzYwLjcgMjAyLjcgMTQ0MCAxODEuM0wxNDQwIDMyMEwxMzkyIDMyMEMxMzQ0IDMyMCAxMjk2IDMyMCAxMjQ4IDMyMEMxMjAwIDMyMCAxMTUyIDMyMCAxMTA0IDMyMEMxMDU2IDMyMCAxMDA4IDMyMCA5NjAgMzIwQzkxMiAzMjAgODY0IDMyMCA4MTYgMzIwQzc2OCAzMjAgNzIwIDMyMCA2NzIgMzIwQzYyNCAzMjAgNTc2IDMyMCA1MjggMzIwQzQ4MCAzMjAgNDMyIDMyMCAzODQgMzIwQzMzNiAzMjAgMjg4IDMyMCAyNDAgMzIwQzE5MiAzMjAgMTQ0IDMyMCA5NiAzMjBDNDggMzIwIDI0IDMyMCAwIDMyMEwwIDE2MFoiIGZpbGw9InVybCgjcGFpbnQwX2xpbmVhcl8xXzIpIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MF9saW5lYXJfMV8yIiB4MT0iMCIgeTE9IjE2MCIgeDI9IjE0NDAiIHkyPSIxNjAiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzY2N0VFQSIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3NjRCQTIiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4=') no-repeat bottom;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- Sidebar -->
+<div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-30 sidebar">
+    <div class="p-6">
+        <div class="flex items-center space-x-3 mb-8">
+            <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center text-white">
+                <i class="fas fa-cube"></i>
+            </div>
+            <h1 class="text-xl font-bold gradient-text">БНТП</h1>
+        </div>
+
+        <nav class="space-y-2">
+            <button onclick="switchTab('overview')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-purple-50 text-gray-700 flex items-center space-x-3 transition">
+                <i class="fas fa-home w-5"></i>
+                <span class="sidebar-text">Обзор</span>
+            </button>
+            <button onclick="switchTab('bookings')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-purple-50 text-gray-700 flex items-center space-x-3 transition">
+                <i class="fas fa-calendar-check w-5"></i>
+                <span class="sidebar-text">Бронирование</span>
+            </button>
+            <button onclick="switchTab('announcements')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-purple-50 text-gray-700 flex items-center space-x-3 transition">
+                <i class="fas fa-bullhorn w-5"></i>
+                <span class="sidebar-text">Объявления</span>
+            </button>
+            <button id="adminTab" onclick="switchTab('admin')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-purple-50 text-gray-700 flex items-center space-x-3 transition hidden">
+                <i class="fas fa-cog w-5"></i>
+                <span class="sidebar-text">Администрирование</span>
+            </button>
+        </nav>
+    </div>
+
+    <div class="absolute bottom-0 left-0 right-0 p-6">
+        <button onclick="toggleSidebar()" class="w-full text-center text-gray-500 hover:text-gray-700">
+            <i class="fas fa-chevron-left" id="sidebarToggleIcon"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="ml-64 transition-all" id="mainContent">
+    <!-- Header -->
+    <nav class="bg-white shadow-sm p-4 sticky top-0 z-20">
+        <div class="flex justify-between items-center">
+            <h2 class="text-2xl font-bold text-gray-800" id="pageTitle">Панель управления</h2>
+            <div class="flex items-center space-x-4">
+                <!-- Notifications -->
+                <div class="relative">
+                    <button class="text-gray-600 hover:text-gray-800 relative">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="notification-badge absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    </button>
+                </div>
+
+                <!-- User Menu -->
+                <div class="flex items-center space-x-3">
+                    <img src="https://ui-avatars.com/api/?name=User&background=667eea&color=fff" alt="Avatar" class="w-10 h-10 rounded-full">
+                    <div>
+                        <p class="text-sm font-medium text-gray-700" id="userName">Загрузка...</p>
+                        <p class="text-xs text-gray-500" id="userRole">...</p>
+                    </div>
+                    <button onclick="logout()" class="ml-3 text-red-500 hover:text-red-600">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="p-6">
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner gradient-bg rounded-2xl p-8 mb-8 text-white">
+                <h1 class="text-3xl font-bold mb-2">Добро пожаловать в панель управления!</h1>
+                <p class="text-lg opacity-90">Управляйте технопарком эффективно и удобно</p>
+                <div class="mt-6 flex space-x-4">
+                    <button onclick="switchTab('bookings')" class="bg-white text-purple-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition">
+                        <i class="fas fa-plus mr-2"></i>Новая бронь
+                    </button>
+                    <button onclick="switchTab('announcements')" class="bg-purple-700 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-800 transition">
+                        <i class="fas fa-bullhorn mr-2"></i>Создать объявление
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card p-6 rounded-xl">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Всего пользователей</p>
+                            <p class="text-3xl font-bold text-gray-800" id="totalUsers">47</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users text-purple-600"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center text-sm">
+                        <i class="fas fa-arrow-up text-green-500 mr-1"></i>
+                        <span class="text-green-500">12%</span>
+                        <span class="text-gray-500 ml-1">за месяц</span>
+                    </div>
+                </div>
+
+                <div class="stat-card p-6 rounded-xl">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Активные брони</p>
+                            <p class="text-3xl font-bold text-gray-800" id="activeBookings">12</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-calendar-check text-blue-600"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center text-sm">
+                        <i class="fas fa-arrow-up text-green-500 mr-1"></i>
+                        <span class="text-green-500">8%</span>
+                        <span class="text-gray-500 ml-1">за неделю</span>
+                    </div>
+                </div>
+
+                <div class="stat-card p-6 rounded-xl">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Объявления</p>
+                            <p class="text-3xl font-bold text-gray-800" id="totalAnnouncements">8</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-bullhorn text-green-600"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center text-sm">
+                        <i class="fas fa-minus text-gray-500 mr-1"></i>
+                        <span class="text-gray-500">Без изменений</span>
+                    </div>
+                </div>
+
+                <div class="stat-card p-6 rounded-xl">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Ожидают одобрения</p>
+                            <p class="text-3xl font-bold text-gray-800" id="pendingApprovals">3</p>
+                        </div>
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-clock text-orange-600"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center text-sm">
+                        <i class="fas fa-exclamation-circle text-orange-500 mr-1"></i>
+                        <span class="text-orange-500">Требует внимания</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="text-lg font-semibold mb-4">Статистика бронирований</h3>
+                    <div class="chart-container">
+                        <canvas id="bookingsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="text-lg font-semibold mb-4">Типы пользователей</h3>
+                    <div class="chart-container">
+                        <canvas id="usersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-semibold mb-4">Последняя активность</h3>
+                <div class="space-y-4" id="activityList">
+                    <div class="activity-item flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition">
+                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user-plus text-purple-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">Новая регистрация</p>
+                            <p class="text-xs text-gray-500">ООО "ИнноТех" подала заявку на резидентство</p>
+                        </div>
+                        <span class="text-xs text-gray-400">5 мин назад</span>
+                    </div>
+
+                    <div class="activity-item flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-calendar text-blue-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">Новое бронирование</p>
+                            <p class="text-xs text-gray-500">Конференц-зал А забронирован на 20.12</p>
+                        </div>
+                        <span class="text-xs text-gray-400">15 мин назад</span>
+                    </div>
+
+                    <div class="activity-item flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition">
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-check text-green-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">Бронь подтверждена</p>
+                            <p class="text-xs text-gray-500">Офис 305 подтвержден для "DataSoft"</p>
+                        </div>
+                        <span class="text-xs text-gray-400">1 час назад</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings Tab -->
+        <div id="bookings" class="tab-content">
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">Управление бронированием</h2>
+                    <button onclick="openBookingModal()" class="gradient-bg text-white px-6 py-2 rounded-lg hover:opacity-90 transition">
+                        <i class="fas fa-plus mr-2"></i>Новая бронь
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="flex space-x-4 mb-6">
+                    <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option>Все типы</option>
+                        <option>Конференц-залы</option>
+                        <option>Офисы</option>
+                    </select>
+                    <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option>Все статусы</option>
+                        <option>Ожидает</option>
+                        <option>Подтверждено</option>
+                        <option>Отклонено</option>
+                    </select>
+                    <input type="date" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                        <tr class="text-left border-b">
+                            <th class="pb-3 font-medium text-gray-700">Помещение</th>
+                            <th class="pb-3 font-medium text-gray-700">Дата и время</th>
+                            <th class="pb-3 font-medium text-gray-700">Пользователь</th>
+                            <th class="pb-3 font-medium text-gray-700">Статус</th>
+                            <th class="pb-3 font-medium text-gray-700">Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody id="bookingsList">
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-door-open text-purple-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Конференц-зал А</p>
+                                        <p class="text-sm text-gray-500">3 этаж, 50 мест</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4">
+                                <p class="font-medium">15.12.2024</p>
+                                <p class="text-sm text-gray-500">10:00 - 12:00</p>
+                            </td>
+                            <td class="py-4">
+                                <p class="font-medium">ООО "ТехноСофт"</p>
+                                <p class="text-sm text-gray-500">Иванов И.И.</p>
+                            </td>
+                            <td class="py-4">
+                                <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Ожидает</span>
+                            </td>
+                            <td class="py-4">
+                                <div class="flex space-x-2">
+                                    <button class="text-green-600 hover:bg-green-50 p-2 rounded">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:bg-red-50 p-2 rounded">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <button class="text-gray-600 hover:bg-gray-100 p-2 rounded">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Announcements Tab -->
+        <div id="announcements" class="tab-content">
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">Управление объявлениями</h2>
+                    <button onclick="openAnnouncementModal()" class="gradient-bg text-white px-6 py-2 rounded-lg hover:opacity-90 transition">
+                        <i class="fas fa-plus mr-2"></i>Новое объявление
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="announcementsList">
+                    <div class="border rounded-xl p-6 hover:shadow-lg transition">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Новости</span>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </div>
+                        <h3 class="font-semibold text-lg mb-2">Открытие нового коворкинга</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">Рады сообщить об открытии современного коворкинг-пространства на 2 этаже...</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-500">15.12.2024</span>
+                            <div class="flex space-x-2">
+                                <button class="text-green-600 hover:bg-green-50 px-3 py-1 rounded text-sm">
+                                    <i class="fas fa-paper-plane mr-1"></i>Опубликовать
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border rounded-xl p-6 hover:shadow-lg transition">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-800">Вакансия</span>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </div>
+                        <h3 class="font-semibold text-lg mb-2">Frontend разработчик</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">Резидент технопарка ищет опытного Frontend разработчика для работы над...</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-500">14.12.2024</span>
+                            <div class="flex items-center text-green-600">
+                                <i class="fas fa-check-circle mr-1"></i>
+                                <span class="text-sm">Опубликовано</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Tab -->
+        <div id="admin" class="tab-content">
+            <div class="grid lg:grid-cols-2 gap-6">
+                <!-- Pending Users -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-user-clock mr-3 text-purple-600"></i>
+                        Пользователи ожидающие одобрения
+                    </h3>
+                    <div class="space-y-4" id="pendingUsersList">
+                        <div class="border rounded-lg p-4 hover:shadow-md transition">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-semibold">ООО "ИнноТех"</h4>
+                                    <p class="text-sm text-gray-600 mt-1">innotech@example.com</p>
+                                    <div class="flex items-center mt-2 space-x-4 text-xs text-gray-500">
+                                        <span><i class="fas fa-user mr-1"></i>Петров П.П.</span>
+                                        <span><i class="fas fa-briefcase mr-1"></i>IT-разработка</span>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="approveUser(3)" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm">
+                                        <i class="fas fa-check mr-1"></i>Одобрить
+                                    </button>
+                                    <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                                        <i class="fas fa-times mr-1"></i>Отклонить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Settings -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-cogs mr-3 text-purple-600"></i>
+                        Системные настройки
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                                <p class="font-medium">Автоматическое одобрение резидентов</p>
+                                <p class="text-sm text-gray-500">Одобрять заявки автоматически после проверки</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                                <p class="font-medium">Email уведомления</p>
+                                <p class="text-sm text-gray-500">Отправлять уведомления о новых заявках</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Overview -->
+            <div class="mt-6 bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-chart-line mr-3 text-purple-600"></i>
+                    Статистика системы
+                </h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="w-20 h-20 mx-auto bg-purple-100 rounded-full flex items-center justify-center mb-3">
+                            <i class="fas fa-building text-purple-600 text-2xl"></i>
+                        </div>
+                        <p class="text-2xl font-bold">24</p>
+                        <p class="text-sm text-gray-600">Активных резидентов</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-3">
+                            <i class="fas fa-door-closed text-blue-600 text-2xl"></i>
+                        </div>
+                        <p class="text-2xl font-bold">18</p>
+                        <p class="text-sm text-gray-600">Занятых офисов</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-3">
+                            <i class="fas fa-percentage text-green-600 text-2xl"></i>
+                        </div>
+                        <p class="text-2xl font-bold">75%</p>
+                        <p class="text-sm text-gray-600">Заполненность</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-3">
+                            <i class="fas fa-chart-pie text-orange-600 text-2xl"></i>
+                        </div>
+                        <p class="text-2xl font-bold">₽2.4М</p>
+                        <p class="text-sm text-gray-600">Доход за месяц</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white p-8 rounded-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold">Новая бронь</h3>
+            <button onclick="closeBookingModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <form id="bookingForm" class="space-y-6">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Тип помещения</label>
+                    <select name="roomType" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="">Выберите тип</option>
+                        <option value="CONFERENCE_HALL">Конференц-зал</option>
+                        <option value="OFFICE">Офис</option>
+                        <option value="COWORKING">Коворкинг</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Название помещения</label>
+                    <input type="text" name="roomName" required placeholder="Например: Конференц-зал А"
+                           class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Начало</label>
+                    <input type="datetime-local" name="startTime" required
+                           class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Окончание</label>
+                    <input type="datetime-local" name="endTime" required
+                           class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Цель мероприятия</label>
+                <textarea name="purpose" required rows="3" placeholder="Опишите цель бронирования"
+                          class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Контактная информация</label>
+                <input type="text" name="contactInfo" required placeholder="+375 (29) 123-45-67"
+                       class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-medium mb-3">Дополнительные услуги</h4>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2" name="projector">
+                        <span>Проектор и экран</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2" name="catering">
+                        <span>Кейтеринг</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2" name="parking">
+                        <span>Парковочные места</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3">
+                <button type="button" onclick="closeBookingModal()"
+                        class="px-6 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                    Отмена
+                </button>
+                <button type="submit"
+                        class="px-6 py-3 gradient-bg text-white rounded-lg hover:opacity-90 transition">
+                    <i class="fas fa-save mr-2"></i>Создать бронь
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Announcement Modal -->
+<div id="announcementModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white p-8 rounded-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold">Новое объявление</h3>
+            <button onclick="closeAnnouncementModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <form id="announcementForm" class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium mb-2">Заголовок</label>
+                <input type="text" name="title" required placeholder="Введите заголовок объявления"
+                       class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Тип объявления</label>
+                <div class="grid grid-cols-3 gap-3">
+                    <label class="relative">
+                        <input type="radio" name="type" value="NEWS" required class="sr-only peer">
+                        <div class="p-4 border rounded-lg cursor-pointer hover:bg-gray-50 peer-checked:border-purple-500 peer-checked:bg-purple-50">
+                            <i class="fas fa-newspaper text-2xl text-blue-600 mb-2"></i>
+                            <p class="font-medium">Новости</p>
+                        </div>
+                    </label>
+                    <label class="relative">
+                        <input type="radio" name="type" value="VACANCY" required class="sr-only peer">
+                        <div class="p-4 border rounded-lg cursor-pointer hover:bg-gray-50 peer-checked:border-purple-500 peer-checked:bg-purple-50">
+                            <i class="fas fa-briefcase text-2xl text-green-600 mb-2"></i>
+                            <p class="font-medium">Вакансия</p>
+                        </div>
+                    </label>
+                    <label class="relative">
+                        <input type="radio" name="type" value="EVENT" required class="sr-only peer">
+                        <div class="p-4 border rounded-lg cursor-pointer hover:bg-gray-50 peer-checked:border-purple-500 peer-checked:bg-purple-50">
+                            <i class="fas fa-calendar-alt text-2xl text-orange-600 mb-2"></i>
+                            <p class="font-medium">Мероприятие</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Содержание</label>
+                <textarea name="content" required rows="6" placeholder="Введите текст объявления"
+                          class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Изображение (опционально)</label>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition">
+                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                    <p class="text-gray-600">Перетащите изображение или нажмите для выбора</p>
+                    <input type="file" accept="image/*" class="hidden">
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3">
+                <button type="button" onclick="closeAnnouncementModal()"
+                        class="px-6 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                    Отмена
+                </button>
+                <button type="button"
+                        class="px-6 py-3 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition">
+                    <i class="fas fa-save mr-2"></i>Сохранить черновик
+                </button>
+                <button type="submit"
+                        class="px-6 py-3 gradient-bg text-white rounded-lg hover:opacity-90 transition">
+                    <i class="fas fa-paper-plane mr-2"></i>Опубликовать
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // User data
+    const currentUser = {
+        username: localStorage.getItem('username') || 'admin',
+        role: localStorage.getItem('role') || 'ADMIN',
+        name: 'Администратор БНТП'
+    };
+
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeDashboard();
+        initializeCharts();
+        loadDashboardData();
+    });
+
+    function initializeDashboard() {
+        // Set user info
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userRole').textContent = getRoleDisplayName(currentUser.role);
+
+        // Show/hide admin tab
+        if (currentUser.role === 'ADMIN') {
+            document.getElementById('adminTab').classList.remove('hidden');
+        }
+
+        // Initialize tooltips, animations, etc.
+        initializeAnimations();
+    }
+
+    function getRoleDisplayName(role) {
+        const roleNames = {
+            'ADMIN': 'Администратор',
+            'RESIDENT': 'Резидент',
+            'USER': 'Пользователь',
+            'TECHPARK': 'Технопарк'
+        };
+        return roleNames[role] || role;
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const icon = document.getElementById('sidebarToggleIcon');
+
+        sidebar.classList.toggle('sidebar-collapsed');
+
+        if (sidebar.classList.contains('sidebar-collapsed')) {
+            mainContent.style.marginLeft = '80px';
+            icon.className = 'fas fa-chevron-right';
+            document.querySelectorAll('.sidebar-text').forEach(el => el.style.display = 'none');
+        } else {
+            mainContent.style.marginLeft = '256px';
+            icon.className = 'fas fa-chevron-left';
+            setTimeout(() => {
+                document.querySelectorAll('.sidebar-text').forEach(el => el.style.display = 'block');
+            }, 150);
+        }
+    }
+
+    function switchTab(tabId) {
+        // Update page title
+        const titles = {
+            'overview': 'Панель управления',
+            'bookings': 'Бронирование',
+            'announcements': 'Объявления',
+            'admin': 'Администрирование'
+        };
+        document.getElementById('pageTitle').textContent = titles[tabId] || 'Панель управления';
+
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // Show selected tab
+        document.getElementById(tabId).classList.add('active');
+
+        // Update sidebar active state
+        document.querySelectorAll('nav button').forEach(btn => {
+            btn.classList.remove('bg-purple-100', 'text-purple-700');
+        });
+        event.currentTarget.classList.add('bg-purple-100', 'text-purple-700');
+
+        // Load tab data
+        loadTabData(tabId);
+    }
+
+    function initializeCharts() {
+        // Bookings Chart
+        const bookingsCtx = document.getElementById('bookingsChart').getContext('2d');
+        new Chart(bookingsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+                datasets: [{
+                    label: 'Бронирования',
+                    data: [12, 19, 15, 25, 22, 18, 28],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Users Chart
+        const usersCtx = document.getElementById('usersChart').getContext('2d');
+        new Chart(usersCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Резиденты', 'Пользователи', 'Технопарки', 'Администраторы'],
+                datasets: [{
+                    data: [24, 15, 6, 2],
+                    backgroundColor: [
+                        '#667eea',
+                        '#48bb78',
+                        '#ed8936',
+                        '#e53e3e'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+
+    function initializeAnimations() {
+        // Animate stat cards on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '0';
+                    entry.target.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        entry.target.style.transition = 'all 0.6s ease';
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, 100);
+                }
+            });
+        });
+
+        document.querySelectorAll('.stat-card').forEach(card => {
+            observer.observe(card);
+        });
+    }
+
+    function loadDashboardData() {
+        // Simulate loading dashboard data
+        loadTabData('overview');
+    }
+
+    function loadTabData(tabId) {
+        switch(tabId) {
+            case 'bookings':
+                loadBookings();
+                break;
+            case 'announcements':
+                loadAnnouncements();
+                break;
+            case 'admin':
+                if (currentUser.role === 'ADMIN') {
+                    loadPendingUsers();
+                }
+                break;
+        }
+    }
+
+    function loadBookings() {
+        // Simulate loading bookings
+        console.log('Loading bookings...');
+    }
+
+    function loadAnnouncements() {
+        fetch('/api/announcements')
+            .then(response => response.json())
+            .then(data => {
+                // Update announcements list
+                console.log('Announcements loaded:', data);
+            })
+            .catch(error => {
+                console.error('Error loading announcements:', error);
+            });
+    }
+
+    function loadPendingUsers() {
+        // Simulate loading pending users
+        console.log('Loading pending users...');
+    }
+
+    // Modal functions
+    function openBookingModal() {
+        document.getElementById('bookingModal').classList.remove('hidden');
+    }
+
+    function closeBookingModal() {
+        document.getElementById('bookingModal').classList.add('hidden');
+        document.getElementById('bookingForm').reset();
+    }
+
+    function openAnnouncementModal() {
+        document.getElementById('announcementModal').classList.remove('hidden');
+    }
+
+    function closeAnnouncementModal() {
+        document.getElementById('announcementModal').classList.add('hidden');
+        document.getElementById('announcementForm').reset();
+    }
+
+    // Form handlers
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        // Add loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Создание...';
+
+        fetch('/api/booking', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(() => {
+                closeBookingModal();
+                loadBookings();
+                showNotification('Бронь создана успешно!', 'success');
+            })
+            .catch(() => {
+                showNotification('Ошибка создания брони', 'error');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>Создать бронь';
+            });
+    });
+
+    document.getElementById('announcementForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        fetch('/api/announcement', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(() => {
+                closeAnnouncementModal();
+                loadAnnouncements();
+                showNotification('Объявление опубликовано!', 'success');
+            })
+            .catch(() => {
+                showNotification('Ошибка публикации', 'error');
+            });
+    });
+
+    // Notification function
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 p-4 rounded-lg text-white ${
+            type === 'success' ? 'bg-green-500' :
+                type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+        } shadow-lg z-50 animate-pulse`;
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas ${
+            type === 'success' ? 'fa-check-circle' :
+                type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'
+        } mr-2"></i>
+                ${message}
+            </div>
+        `;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    // Admin functions
+    function approveUser(userId) {
+        fetch(`/api/admin/approve-user/${userId}`, { method: 'POST' })
+            .then(() => {
+                loadPendingUsers();
+                showNotification('Пользователь одобрен!', 'success');
+            })
+            .catch(() => showNotification('Ошибка одобрения', 'error'));
+    }
+
+    function logout() {
+        localStorage.clear();
+        window.location.href = '/';
+    }
+
+    // Close modals on ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeBookingModal();
+            closeAnnouncementModal();
+        }
+    });
+</script>
+</body>
+</html>

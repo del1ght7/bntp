@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - БНТП</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen py-8">
+<div class="container mx-auto px-4">
+    <div class="bg-white p-8 rounded-lg shadow-2xl max-w-2xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Регистрация</h1>
+            <p class="text-gray-600 mt-2">Присоединяйтесь к Брестскому научно-технологическому парку</p>
+        </div>
+
+        <form id="registerForm" class="space-y-6">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700">Логин *</label>
+                    <input type="text" id="username" name="username" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email *</label>
+                    <input type="email" id="email" name="email" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Пароль *</label>
+                    <input type="password" id="password" name="password" required minlength="6"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+                    <p class="mt-1 text-xs text-gray-500">Минимум 6 символов</p>
+                </div>
+
+                <div>
+                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Подтвердите пароль *</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+                </div>
+            </div>
+
+            <div>
+                <label for="company" class="block text-sm font-medium text-gray-700">Название организации *</label>
+                <input type="text" id="company" name="company" required
+                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+            </div>
+
+            <div>
+                <label for="role" class="block text-sm font-medium text-gray-700">Тип пользователя *</label>
+                <select id="role" name="role" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+                    <option value="">Выберите тип</option>
+                    <option value="USER">Пользователь</option>
+                    <option value="RESIDENT">Резидент</option>
+                    <option value="TECHPARK">Технопарк</option>
+                </select>
+            </div>
+
+            <!-- Дополнительная информация для резидентов -->
+            <div id="residentInfo" class="hidden space-y-4 p-4 bg-gray-50 rounded-lg">
+                <h3 class="text-lg font-medium text-gray-800">Информация для резидентов</h3>
+
+                <div>
+                    <label for="activityType" class="block text-sm font-medium text-gray-700">Вид деятельности</label>
+                    <select id="activityType" name="activityType"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+                        <option value="">Выберите вид деятельности</option>
+                        <option value="IT">Информационные технологии</option>
+                        <option value="BIOTECH">Биотехнологии</option>
+                        <option value="NANOTECH">Нанотехнологии</option>
+                        <option value="ENERGY">Энергетика</option>
+                        <option value="MANUFACTURING">Производство</option>
+                        <option value="OTHER">Другое</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700">Описание деятельности</label>
+                    <textarea id="description" name="description" rows="3"
+                              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+                              placeholder="Кратко опишите деятельность вашей организации"></textarea>
+                </div>
+            </div>
+
+            <div class="flex items-center">
+                <input id="terms" name="terms" type="checkbox" required
+                       class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                <label for="terms" class="ml-2 block text-sm text-gray-700">
+                    Я согласен с <a href="#" class="text-purple-600 hover:underline">условиями использования</a> и
+                    <a href="#" class="text-purple-600 hover:underline">политикой конфиденциальности</a> *
+                </label>
+            </div>
+
+            <button type="submit" class="w-full bg-purple-600 text-white py-3 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition font-medium">
+                Зарегистрироваться
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <p class="text-gray-600">Уже есть аккаунт?
+                <a href="/login" class="text-purple-600 hover:underline font-medium">Войти</a>
+            </p>
+        </div>
+
+        <div class="mt-4 text-center">
+            <a href="/" class="text-sm text-gray-500 hover:underline">← Вернуться на главную</a>
+        </div>
+
+        <div id="message" class="mt-4 p-3 rounded hidden"></div>
+    </div>
+</div>
+
+<script>
+    // Показать дополнительные поля для резидентов
+    document.getElementById('role').addEventListener('change', function() {
+        const residentInfo = document.getElementById('residentInfo');
+        if (this.value === 'RESIDENT') {
+            residentInfo.classList.remove('hidden');
+        } else {
+            residentInfo.classList.add('hidden');
+        }
+    });
+
+    // Обработка формы регистрации
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+        const messageDiv = document.getElementById('message');
+
+        // Проверка совпадения паролей
+        if (data.password !== data.confirmPassword) {
+            messageDiv.className = 'mt-4 p-3 rounded bg-red-100 text-red-700';
+            messageDiv.textContent = 'Пароли не совпадают';
+            messageDiv.classList.remove('hidden');
+            return;
+        }
+
+        // Отправка данных на сервер
+        fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: data.username,
+                password: data.password,
+                email: data.email,
+                company: data.company,
+                role: data.role
+            })
+        })
+            .then(response => response.text())
+            .then(result => {
+                if (result.includes('successful')) {
+                    messageDiv.className = 'mt-4 p-3 rounded bg-green-100 text-green-700';
+                    messageDiv.textContent = 'Регистрация успешна! Ожидайте подтверждения администратора.';
+                    document.getElementById('registerForm').reset();
+                } else {
+                    messageDiv.className = 'mt-4 p-3 rounded bg-red-100 text-red-700';
+                    messageDiv.textContent = result;
+                }
+                messageDiv.classList.remove('hidden');
+            })
+            .catch(error => {
+                messageDiv.className = 'mt-4 p-3 rounded bg-red-100 text-red-700';
+                messageDiv.textContent = 'Ошибка регистрации: ' + error.message;
+                messageDiv.classList.remove('hidden');
+            });
+    });
+
+    // Валидация пароля в реальном времени
+    document.getElementById('confirmPassword').addEventListener('input', function() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = this.value;
+
+        if (confirmPassword && password !== confirmPassword) {
+            this.setCustomValidity('Пароли не совпадают');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+</script>
+</body>
+</html>
