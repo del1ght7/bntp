@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Брестский научно-технологический парк - Крупнейший инновационный центр региона</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hero-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-in-left {
+            animation: slideInLeft 0.8s ease-out;
+        }
+        .animate-slide-in-right {
+            animation: slideInRight 0.8s ease-out;
+        }
+        .animate-slide-in-up {
+            animation: slideInUp 0.8s ease-out;
+        }
+        .service-card {
+            transition: all 0.3s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .navbar {
+            transition: all 0.3s ease;
+        }
+        .navbar-scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        .counter {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+        .partner-logo {
+            filter: grayscale(100%);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .partner-logo:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -5px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+        .step-card {
+            transition: all 0.3s ease;
+        }
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        .news-card {
+            transition: all 0.3s ease;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        .news-image {
+            height: 240px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: cover;
+            background-position: center;
+        }
+        .benefit-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            transition: all 0.3s ease;
+        }
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
+        }
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        .stats-section {
+            background: linear-gradient(135deg, #1e1b4b 0%, #3730a3 100%);
+        }
+        .innovation-grid {
+            background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- Navigation -->
+<nav id="navbar" class="navbar fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center text-white">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <h1 class="text-2xl font-bold">
+                    <span class="gradient-text">БНТП</span>
+                </h1>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="text-gray-700 hover:text-purple-600 transition">О нас</a>
+                <a href="#services" class="text-gray-700 hover:text-purple-600 transition">Услуги</a>
+                <a href="#residents" class="text-gray-700 hover:text-purple-600 transition">Резиденты</a>
+                <a href="#how-to-become" class="text-gray-700 hover:text-purple-600 transition">Как стать резидентом</a>
+                <a href="#news" class="text-gray-700 hover:text-purple-600 transition">Новости</a>
+                <a href="#contact" class="text-gray-700 hover:text-purple-600 transition">Контакты</a>
+                <a href="/login" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Войти
+                </a>
+                <a href="/register" class="border border-purple-600 text-purple-600 px-6 py-2 rounded-lg hover:bg-purple-50 transition">
+                    Стать резидентом
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-gray-700" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="fixed inset-0 bg-white z-40 transform translate-x-full transition-transform md:hidden">
+    <div class="p-6">
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-gray-700">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        <div class="mt-12 space-y-4">
+            <a href="#about" class="block text-lg text-gray-700 hover:text-purple-600">О нас</a>
+            <a href="#services" class="block text-lg text-gray-700 hover:text-purple-600">Услуги</a>
+            <a href="#residents" class="block text-lg text-gray-700 hover:text-purple-600">Резиденты</a>
+            <a href="#how-to-become" class="block text-lg text-gray-700 hover:text-purple-600">Как стать резидентом</a>
+            <a href="#news" class="block text-lg text-gray-700 hover:text-purple-600">Новости</a>
+            <a href="#contact" class="block text-lg text-gray-700 hover:text-purple-600">Контакты</a>
+            <a href="/login" class="block bg-purple-600 text-white px-6 py-3 rounded-lg text-center">Войти</a>
+            <a href="/register" class="block border border-purple-600 text-purple-600 px-6 py-3 rounded-lg text-center mt-3">Стать резидентом</a>
+        </div>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<header class="gradient-bg text-white pt-32 pb-20 relative overflow-hidden">
+    <div class="hero-pattern absolute inset-0"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="animate-slide-in-left">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                    Брестский научно-технологический парк
+                </h1>
+                <p class="text-xl mb-8 opacity-90">
+                    Крупнейший инновационный центр и главный инкубатор малого предпринимательства в Брестском регионе. Создаем экосистему для развития высокотехнологичного бизнеса.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('contact')" class="bg-white text-purple-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition transform hover:scale-105 pulse-glow">
+                        <i class="fas fa-rocket mr-2"></i>Стать резидентом
+                    </button>
+                    <button onclick="openVideoModal()" class="border border-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-purple-600 transition">
+                        <i class="fas fa-play-circle mr-2"></i>Видео о нас
+                    </button>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-6 mt-12">
+                    <div class="text-center">
+                        <div class="counter" data-target="50">50+</div>
+                        <p class="text-sm opacity-75">Резидентов</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="counter" data-target="15">15+ млн</div>
+                        <p class="text-sm opacity-75">$ выручки (2021)</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="counter" data-target="13">13 лет</div>
+                        <p class="text-sm opacity-75">на рынке</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="animate-slide-in-right hidden md:block">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop"
+                         alt="Технопарк"
+                         class="rounded-2xl shadow-2xl float-animation">
+                    <div class="absolute -bottom-4 -right-4 bg-white p-4 rounded-xl shadow-lg">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-600">2011</div>
+                            <div class="text-sm text-gray-600">Основан</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decorative shapes -->
+    <div class="absolute top-20 right-10 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+    <div class="absolute bottom-20 left-10 w-64 h-64 bg-purple-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+</header>
+
+<!-- Mission Section -->
+<section class="py-16 bg-gradient-to-r from-blue-50 to-purple-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-6">Наша миссия</h2>
+            <p class="text-lg text-gray-700 mb-8">
+                Способствовать развитию инновационной экономики города Бреста и Брестской области посредством создания центра притяжения инноваций во всех сферах деятельности. Мы находим и объединяем партнёров, способствуя тесным и продуктивным контактам мира науки, производства и финансов.
+            </p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-lightbulb text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="font-semibold mb-2">Инновации</h3>
+                    <p class="text-sm text-gray-600">Поддержка передовых технологий и креативных решений</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-users text-2xl text-purple-600"></i>
+                    </div>
+                    <h3 class="font-semibold mb-2">Партнерство</h3>
+                    <p class="text-sm text-gray-600">Объединение науки, бизнеса и государства</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-chart-line text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="font-semibold mb-2">Развитие</h3>
+                    <p class="text-sm text-gray-600">Создание устойчивой экосистемы роста</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-20">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4">Почему выбирают БНТП?</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Мы создаем идеальные условия для развития инновационных компаний и стартапов
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="benefit-card p-6 rounded-xl text-center group">
+                <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center group-hover:scale-110 transition">
+                    <i class="fas fa-building text-2xl text-purple-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Готовая инфраструктура</h3>
+                <p class="text-gray-600 text-sm">Офисы, конференц-залы, коворкинги и современное оборудование</p>
+            </div>
+
+            <div class="benefit-card p-6 rounded-xl text-center group">
+                <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center group-hover:scale-110 transition">
+                    <i class="fas fa-percent text-2xl text-blue-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Налоговые льготы</h3>
+                <p class="text-gray-600 text-sm">Льготное налогообложение на весь период резидентства</p>
+            </div>
+
+            <div class="benefit-card p-6 rounded-xl text-center group">
+                <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center group-hover:scale-110 transition">
+                    <i class="fas fa-handshake text-2xl text-green-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Профессиональный консалтинг</h3>
+                <p class="text-gray-600 text-sm">Экспертная поддержка в области права, экономики и бухучета</p>
+            </div>
+
+            <div class="benefit-card p-6 rounded-xl text-center group">
+                <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center group-hover:scale-110 transition">
+                    <i class="fas fa-rocket text-2xl text-orange-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Стартап-поддержка</h3>
+                <p class="text-gray-600 text-sm">Бизнес-инкубатор, стартап-школы и акселерационные программы</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-20 bg-gray-100">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4">Наши услуги</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Комплексная поддержка для развития вашего бизнеса на всех этапах
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="service-card bg-white p-8 rounded-2xl shadow-lg">
+                <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                    <i class="fas fa-door-open text-2xl text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Аренда помещений</h3>
+                <ul class="space-y-3 mb-6">
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Переговорка (55 м², до 15 мест)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Конференц-зал (108 м², до 80 мест)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Выставочный зал (180 м², до 120 мест)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Дополнительное оборудование</span>
+                    </li>
+                </ul>
+                <a href="/booking" class="inline-flex items-center text-purple-600 hover:text-purple-700 font-semibold">
+                    Забронировать <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            <div class="service-card bg-white p-8 rounded-2xl shadow-lg">
+                <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                    <i class="fas fa-handshake text-2xl text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Бизнес-консалтинг</h3>
+                <ul class="space-y-3 mb-6">
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Разработка бизнес-планов</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Научно-технические обоснования</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Юридическое сопровождение</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Бухгалтерские услуги</span>
+                    </li>
+                </ul>
+                <a href="#contact" class="inline-flex items-center text-purple-600 hover:text-purple-700 font-semibold">
+                    Получить консультацию <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            <div class="service-card bg-white p-8 rounded-2xl shadow-lg">
+                <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                    <i class="fas fa-graduation-cap text-2xl text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Образование и развитие</h3>
+                <ul class="space-y-3 mb-6">
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Стартап-школы</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Хакатоны и конкурсы</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Центр поддержки технологий</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Образовательные программы</span>
+                    </li>
+                </ul>
+                <a href="#" class="inline-flex items-center text-purple-600 hover:text-purple-700 font-semibold">
+                    Узнать больше <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Innovation Areas Section -->
+<section class="py-20 innovation-grid">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4">Направления инноваций</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Наши резиденты работают в различных высокотехнологичных областях
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition">
+                <div class="w-12 h-12 mx-auto mb-4 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-laptop-code text-xl text-blue-600"></i>
+                </div>
+                <h4 class="font-semibold mb-2">IT и разработка ПО</h4>
+                <p class="text-sm text-gray-600">Программно-аппаратные комплексы, мобильные приложения</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition">
+                <div class="w-12 h-12 mx-auto mb-4 bg-green-100 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-dna text-xl text-green-600"></i>
+                </div>
+                <h4 class="font-semibold mb-2">Биотехнологии</h4>
+                <p class="text-sm text-gray-600">Медицинские и сельскохозяйственные биотехнологии</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition">
+                <div class="w-12 h-12 mx-auto mb-4 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-robot text-xl text-purple-600"></i>
+                </div>
+                <h4 class="font-semibold mb-2">Робототехника</h4>
+                <p class="text-sm text-gray-600">Автоматизация и робототехнические решения</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition">
+                <div class="w-12 h-12 mx-auto mb-4 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-industry text-xl text-orange-600"></i>
+                </div>
+                <h4 class="font-semibold mb-2">Производство</h4>
+                <p class="text-sm text-gray-600">Проектные бюро и производственные предприятия</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="py-20 stats-section text-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4">Результаты в цифрах</h2>
+            <p class="text-lg opacity-90">
+                Наши достижения за годы работы
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="text-5xl font-bold mb-2 counter" data-target="50">50+</div>
+                <h4 class="text-xl font-semibold mb-2">Резидентов</h4>
+                <p class="opacity-80">из различных отраслей экономики</p>
+            </div>
+
+            <div class="text-center">
+                <div class="text-5xl font-bold mb-2">15+ млн</div>
+                <h4 class="text-xl font-semibold mb-2">Долларов выручки</h4>
+                <p class="opacity-80">резидентов за 2021 год</p>
+            </div>
+
+            <div class="text-center">
+                <div class="text-5xl font-bold mb-2 counter" data-target="13">13</div>
+                <h4 class="text-xl font-semibold mb-2">Лет опыта</h4>
+                <p class="opacity-80">на рынке инновационных услуг</p>
+            </div>
+
+            <div class="text-center">
+                <div class="text-5xl font-bold mb-2">1000+</div>
+                <h4 class="text-xl font-semibold mb-2">Рабочих мест</h4>
+                <p class="opacity-80">создано резидентами</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Residents Section -->
+<section id="residents" class="py-20">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4">Наши резиденты</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Более 50 инновационных компаний выбрали БНТП для развития своего бизнеса
+            </p>
+        </div>
+
+        <!-- Residents Slider -->
+        <div class="swiper residentsSwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition">
+                        <img src="https://ui-avatars.com/api/?name=TechSoft&background=667eea&color=fff&size=200"
+                             alt="TechSoft" class="w-24 h-24 mx-auto mb-4 rounded-lg">
+                        <h4 class="text-xl font-semibold text-center mb-2">TechSoft</h4>
+                        <p class="text-gray-600 text-center text-sm">Разработка программного обеспечения</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition">
+                        <img src="https://ui-avatars.com/api/?name=BioLab&background=48bb78&color=fff&size=200"
+                             alt="BioLab" class="w-24 h-24 mx-auto mb-4 rounded-lg">
+                        <h4 class="text-xl font-semibold text-center mb-2">BioLab</h4>
+                        <p class="text-gray-600 text-center text-sm">Биотехнологии и исследования</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition">
+                        <img src="https://ui-avatars.com/api/?name=DataCore&background=ed8936&color=fff&size=200"
+                             alt="DataCore" class="w-24 h-24 mx-auto mb-4 rounded-lg">
+                        <h4 class="text-xl font-semibold text-center mb-2">DataCore</h4>
+                        <p class="text-gray-600 text-center text-sm">Аналитика больших данных</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition">
+                        <img src="https://ui-avatars.com/api/?name=RoboTech&background=e53e3e&color=fff&size=200"
+                             alt="RoboTech" class="w-24 h-24 mx-auto mb-4 rounded-lg">
+                        <h4 class="text-xl font-semibold text-center mb-2">RoboTech</h4>
+                        <p class="text-gray-600 text-center text-sm">Робототехника и автоматизация</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition">
+                        <img src="https://ui-avatars.com/api/?name=CloudNet&background=3182ce&color=fff&size=200"
+                             alt="CloudNet" class="w-24 h-24 mx-auto mb-4 rounded-lg">
+                        <h4 class="text-xl font-semibold text-center mb-2">CloudNet</h4>
+                        <p class="text-gray-600 text-center text-sm">Облачные технологии</p>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination mt-8"></div>
+        </div>
+    </div>
+</section>
+
+<!-- How to Become Resident Section -->
+<section id="how-to-become" class="py-20 bg-gray-100">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4">Как стать резидентом БНТП?</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Простой процесс получения статуса резидента технопарка
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <div class="step-card bg-white p-6 rounded-xl shadow-lg text-center">
+                <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
+                    <span class="text-2xl font-bold text-blue-600">1</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Подача заявки</h3>
+                <p class="text-gray-600 text-sm">Заполните заявление о предоставлении статуса резидента и подготовьте необходимые документы</p>
+            </div>
+
+            <div class="step-card bg-white p-6 rounded-xl shadow-lg text-center">
+                <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center">
+                    <span class="text-2xl font-bold text-green-600">2</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Экспертиза</h3>
+                <p class="text-gray-600 text-sm">Наши эксперты изучают ваш проект на соответствие требованиям</p>
+            </div>
+
+            <div class="step-card bg-white p-6 rounded-xl shadow-lg text-center">
+                <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center">
+                    <span class="text-2xl font-bold text-yellow-600">3</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Презентация Совету</h3>
+                <p class="text-gray-600 text-sm">Презентуйте свой проект членам Совета технопарка</p>
+            </div>
+
+            <div class="step-card bg-white p-6 rounded-xl shadow-lg text-center">
+                <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center">
+                    <span class="text-2xl font-bold text-purple-600">4</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Получение статуса</h3>
+                <p class="text-gray-600 text-sm">Оформление документов и получение всех преимуществ резидентства</p>
+            </div>
+        </div>
+
+        <!-- Requirements Section -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">Требования к резидентам</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span>Юридическое лицо или ИП</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span>Инновационный характер деятельности</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span>Использование собственных разработок</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span>Экспортная ориентация (желательно)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span>Создание новых рабочих мест</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">Необходимые документы</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fas fa-file-alt text-blue-500 mr-3 mt-1"></i>
+                            <span>Заявление о предоставлении статуса</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-file-alt text-blue-500 mr-3 mt-1"></i>
+                            <span>Краткое описание предприятия</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-file-alt text-blue-500 mr-3 mt-1"></i>
+                            <span>Копии учредительных документов</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-file-alt text-blue-500 mr-3 mt-1"></i>
+                            <span>Свидетельство о государственной регистрации</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-file-alt text-blue-500 mr-3 mt-1"></i>
+                            <span>Справка о налоговых обязательствах</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a href="/register" class="inline-flex items-center gradient-bg text-white px-8 py-3 rounded-lg hover:opacity-90 transition text-lg font-semibold">
+                    <i class="fas fa-paper-plane mr-3"></i>Подать заявку на резидентство
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- News Section -->
+<section id="news" class="py-20">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4">Новости и события</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Будьте в курсе последних событий технопарка
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="announcements">
+            <!-- Sample news with proper image -->
+            <div class="news-card">
+                <div class="news-image" style="background-image: url('https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=240&fit=crop&ixlib=rb-4.0.3');">
+                    <div class="w-full h-full bg-gradient-to-t from-black/50 to-transparent flex items-end p-6">
+                        <span class="px-3 py-1 text-xs rounded-full bg-blue-500 text-white">Новости</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">Добро пожаловать в БНТП!</h3>
+                    <p class="text-gray-600 mb-4">Брестский научно-технологический парк приветствует новых резидентов. Мы предлагаем современную инфраструктуру и поддержку для развития инновационного бизнеса.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">15.12.2024</span>
+                        <a href="#" class="text-purple-600 hover:text-purple-700 font-medium">
+                            Читать далее →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional news will be loaded here -->
+        </div>
+
+        <div class="text-center mt-12">
+            <a href="#" class="inline-flex items-center gradient-bg text-white px-8 py-3 rounded-lg hover:opacity-90 transition">
+                Все новости <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Timeline Section -->
+<section class="py-20 bg-gray-100">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4">Наш путь</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                История развития Брестского научно-технологического парка
+            </p>
+        </div>
+
+        <div class="max-w-3xl mx-auto">
+            <div class="timeline-item mb-8">
+                <div class="timeline-dot"></div>
+                <div class="ml-8">
+                    <h3 class="text-xl font-bold mb-2">2011 - Основание</h3>
+                    <p class="text-gray-600">Создание БНТП как юридического лица в декабре</p>
+                </div>
+            </div>
+
+            <div class="timeline-item mb-8">
+                <div class="timeline-dot"></div>
+                <div class="ml-8">
+                    <h3 class="text-xl font-bold mb-2">2012 - Получение статуса</h3>
+                    <p class="text-gray-600">В июне получен статус субъекта инновационной инфраструктуры - научно-технологический парк</p>
+                </div>
+            </div>
+
+            <div class="timeline-item mb-8">
+                <div class="timeline-dot"></div>
+                <div class="ml-8">
+                    <h3 class="text-xl font-bold mb-2">2019 - Рост резидентов</h3>
+                    <p class="text-gray-600">Число резидентов технопарка выросло более чем в 10 раз за 7 лет</p>
+                </div>
+            </div>
+
+            <div class="timeline-item mb-8">
+                <div class="timeline-dot"></div>
+                <div class="ml-8">
+                    <h3 class="text-xl font-bold mb-2">2025 - Центр поддержки технологий</h3>
+                    <p class="text-gray-600">Создание Центра поддержки технологий и инноваций совместно с Национальным центром интеллектуальной собственности</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Partners Section -->
+<section class="py-20">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold mb-4">Наши партнеры</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Сотрудничаем с ведущими организациями, университетами и технологическими компаниями
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 items-center">
+            <!-- Образовательные партнеры -->
+            <div class="partner-logo text-center">
+                <img src="https://ui-avatars.com/api/?name=БрГТУ&background=1e40af&color=fff&size=120" alt="БрГТУ" class="w-20 h-20 mx-auto mb-2 rounded-lg">
+                <p class="text-sm text-gray-600">БрГТУ</p>
+            </div>
+
+            <div class="partner-logo text-center">
+                <img src="https://ui-avatars.com/api/?name=БрГУ&background=dc2626&color=fff&size=120" alt="БрГУ" class="w-20 h-20 mx-auto mb-2 rounded-lg">
+                <p class="text-sm text-gray-600">БрГУ им. А.С. Пушкина</p>
+            </div>
+
+            <!-- Государственные партнеры -->
+            <div class="partner-logo text-center">
+                <img src="https://ui-avatars.com/api/?name=Горисполком&background=059669&color=fff&size=120" alt="Горисполком" class="w-20 h-20 mx-auto mb-2 rounded-lg">
+                <p class="text-sm text-gray-600">Брестский горисполком</p>
+            </div>
+
+            <div class="partner-logo text-center">
+                <img src="https://ui-avatars.com/api/?name=ГКНТ&background=7c3aed&color=fff&size=120" alt="ГКНТ" class="w-20 h-20 mx-auto mb-2 rounded-lg">
+                <p class="text-sm text-gray-600">ГКНТ</p>
+            </div>
+
+            <!-- Национальные партнеры -->
+            <div class="partner-logo text-center">
+                <img src="https://ui-avatars.com/api/?name=НЦИС&background=ea580c&color=fff&size=120" alt="НЦИС" class="w-20 h-20 mx-auto mb-2 rounded-lg">
+                <p class="text-sm text-gray-600">Национальный центр ИС</p>
+            </div>
+
+            <div class="partner-logo text-center">
+                <img src="https://ui-avatars.com/api/?name=Белтелеком&background=0284c7&color=fff&size=120" alt="Белтелеком" class="w-20 h-20 mx-auto mb-2 rounded-lg">
+                <p class="text-sm text-gray-600">Белтелеком</p>
+            </div>
+
+            <!-- Международные партнеры -->
+            <div class="partner-logo text-center">
+                <img src="https://ui-avatars.com/api/?name=USAID&background=16a34a&color=fff&size=120" alt="USAID" class="w-20 h-20 mx-auto mb-2 rounded-lg">
+                <p class="text-sm text-gray-600">USAID</p>
+            </div>
+
+            <div class="partner-logo text-center">
+                <img src="https://ui-avatars.com/api/?name=MinskTP&background=9333ea&color=fff&size=120" alt="MinskTP" class="w-20 h-20 mx-auto mb-2 rounded-lg">
+                <p class="text-sm text-gray-600">Минский технопарк</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 gradient-bg text-white">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold mb-6">Готовы начать инновационный путь?</h2>
+        <p class="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+            Присоединяйтесь к сообществу лидеров технологического бизнеса
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="/register" class="bg-white text-purple-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition transform hover:scale-105 pulse-glow">
+                <i class="fas fa-rocket mr-2"></i>Стать резидентом
+            </a>
+            <button onclick="openContactModal()" class="border border-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-purple-600 transition">
+                <i class="fas fa-phone mr-2"></i>Связаться с нами
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-20 bg-gray-100">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-12">
+            <div>
+                <h2 class="text-4xl font-bold mb-6">Контакты</h2>
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <i class="fas fa-map-marker-alt text-purple-600 text-xl mr-4 mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold mb-1">Адрес</h4>
+                            <p class="text-gray-600">ул. Пионерская, 52<br>Брест, Брестская область 224020<br>Республика Беларусь</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <i class="fas fa-phone text-purple-600 text-xl mr-4 mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold mb-1">Телефон</h4>
+                            <p class="text-gray-600">+375 (162) 20-15-60</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <i class="fas fa-envelope text-purple-600 text-xl mr-4 mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold mb-1">Email</h4>
+                            <p class="text-gray-600">info@bntp.by</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <i class="fas fa-clock text-purple-600 text-xl mr-4 mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold mb-1">Время работы</h4>
+                            <p class="text-gray-600">Пн-Пт: 9:00 - 18:00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Media -->
+                <div class="mt-8">
+                    <h4 class="font-semibold mb-4">Мы в социальных сетях</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-200 transition">
+                            <i class="fab fa-vk text-purple-600"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-200 transition">
+                            <i class="fab fa-linkedin-in text-purple-600"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-200 transition">
+                            <i class="fab fa-instagram text-purple-600"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-200 transition">
+                            <i class="fab fa-telegram text-purple-600"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="bg-gray-200 rounded-2xl h-96 relative overflow-hidden">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2467.234!2d23.7305!3d52.0979!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46e014c9d8b9e5a1%3A0x12345!2z0YPQuy4g0J_QuNC-0L3QtdGA0YHQutCw0Y8sIDUyLCDQkdGA0LXRgdGCIDIyNDAyMCwg0JHQtdC70LDRgNGD0YHRjA!5e0!3m2!1sru!2sby!4v1647890123456"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <div class="absolute top-4 left-4 bg-white p-3 rounded-lg shadow-lg">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-map-marker-alt text-red-500"></i>
+                        <div class="text-sm">
+                            <div class="font-semibold">БНТП</div>
+                            <div class="text-gray-600">ул. Пионерская, 52</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                        <i class="fas fa-cube text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold">БНТП</h3>
+                </div>
+                <p class="text-gray-400 mb-4">
+                    Крупнейший инновационный центр и главный инкубатор малого предпринимательства в Брестском регионе.
+                </p>
+                <p class="text-sm text-gray-500">
+                    Создан в 2011 году<br>
+                    Статус получен в 2012 году
+                </p>
+            </div>
+
+            <div>
+                <h4 class="font-semibold mb-4">Быстрые ссылки</h4>
+                <ul class="space-y-2">
+                    <li><a href="#about" class="text-gray-400 hover:text-white transition">О нас</a></li>
+                    <li><a href="#services" class="text-gray-400 hover:text-white transition">Услуги</a></li>
+                    <li><a href="#residents" class="text-gray-400 hover:text-white transition">Резиденты</a></li>
+                    <li><a href="#how-to-become" class="text-gray-400 hover:text-white transition">Как стать резидентом</a></li>
+                    <li><a href="#news" class="text-gray-400 hover:text-white transition">Новости</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold mb-4">Услуги</h4>
+                <ul class="space-y-2">
+                    <li><a href="/booking" class="text-gray-400 hover:text-white transition">Аренда помещений</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition">Консалтинг</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition">Стартап-школы</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition">Центр поддержки технологий</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold mb-4">Контакты</h4>
+                <div class="space-y-2 text-sm">
+                    <p class="text-gray-400">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        ул. Пионерская, 52, Брест
+                    </p>
+                    <p class="text-gray-400">
+                        <i class="fas fa-phone mr-2"></i>
+                        +375 (162) 20-15-60
+                    </p>
+                    <p class="text-gray-400">
+                        <i class="fas fa-envelope mr-2"></i>
+                        info@bntp.by
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 ЗАО «Брестский научно-технологический парк». Все права защищены.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Video Modal -->
+<div id="videoModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-8 max-w-4xl w-full mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-2xl font-bold">О Брестском научно-технологическом парке</h3>
+            <button onclick="closeVideoModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <div class="aspect-w-16 aspect-h-9">
+            <iframe width="100%" height="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                    frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Modal -->
+<div id="contactModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold">Свяжитесь с нами</h3>
+            <button onclick="closeContactModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <form class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-2">Ваше имя</label>
+                <input type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">Email</label>
+                <input type="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">Телефон</label>
+                <input type="tel" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">Сообщение</label>
+                <textarea rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+            </div>
+            <button type="submit" class="w-full gradient-bg text-white py-3 rounded-lg hover:opacity-90 transition">
+                Отправить сообщение
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Initialize Swiper
+    var swiper = new Swiper('.residentsSwiper', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+            },
+            768: {
+                slidesPerView: 3,
+            },
+            1024: {
+                slidesPerView: 4,
+            },
+        },
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('navbar-scrolled');
+        } else {
+            navbar.classList.remove('navbar-scrolled');
+        }
+    });
+
+    // Counter animation
+    function animateCounters() {
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200;
+
+        counters.forEach(counter => {
+            const animate = () => {
+                const value = +counter.getAttribute('data-target');
+                const data = +counter.innerText;
+                const time = value / speed;
+
+                if (data < value) {
+                    counter.innerText = Math.ceil(data + time);
+                    setTimeout(animate, 1);
+                } else {
+                    counter.innerText = value + (counter.innerText.includes('+') ? '+' : '') + (counter.innerText.includes('млн') ? ' млн' : '');
+                }
+            }
+            animate();
+        });
+    }
+
+    // Intersection Observer for animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-slide-in-up');
+
+                // Start counter animation when in view
+                if (entry.target.querySelector('.counter')) {
+                    animateCounters();
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observe all sections
+    document.querySelectorAll('section').forEach(section => {
+        observer.observe(section);
+    });
+
+    // Load announcements with sample data
+    function loadAnnouncements() {
+        const container = document.getElementById('announcements');
+
+        // Sample announcements to add to the existing one
+        const announcements = [
+            {
+                title: "Хакатон в БНТП: новые идеи и победители",
+                content: "Успешно прошел второй день Хакатона в ЗАО «БНТП». Участники представили свои финальные проекты перед жюри и экспертами, продемонстрировав инновационные решения...",
+                type: "EVENT",
+                createdAt: "2025-04-25",
+                image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=400&h=240&fit=crop"
+            },
+            {
+                title: "Центр поддержки технологий и инноваций",
+                content: "24 апреля 2025 года подписано соглашение о создании Центра поддержки технологий и инноваций в Республике Беларусь на базе ЗАО «БНТП»...",
+                type: "NEWS",
+                createdAt: "2025-04-24",
+                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=240&fit=crop"
+            }
+        ];
+
+        announcements.forEach(announcement => {
+            const div = document.createElement('div');
+            div.className = 'news-card';
+
+            const typeColors = {
+                'NEWS': 'blue',
+                'VACANCY': 'green',
+                'EVENT': 'orange'
+            };
+            const color = typeColors[announcement.type] || 'gray';
+            const typeNames = {
+                'NEWS': 'Новости',
+                'VACANCY': 'Вакансия',
+                'EVENT': 'Событие'
+            };
+
+            div.innerHTML = `
+                <div class="news-image" style="background-image: url('${announcement.image}');">
+                    <div class="w-full h-full bg-gradient-to-t from-black/50 to-transparent flex items-end p-6">
+                        <span class="px-3 py-1 text-xs rounded-full bg-${color}-500 text-white">
+                            ${typeNames[announcement.type]}
+                        </span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">${announcement.title}</h3>
+                    <p class="text-gray-600 mb-4">${announcement.content}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">
+                            ${new Date(announcement.createdAt).toLocaleDateString('ru-RU')}
+                        </span>
+                        <a href="#" class="text-purple-600 hover:text-purple-700 font-medium">
+                            Читать далее →
+                        </a>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // Load announcements when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadAnnouncements();
+    });
+
+    // Mobile menu
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('translate-x-full');
+    }
+
+    // Modal functions
+    function openVideoModal() {
+        document.getElementById('videoModal').classList.remove('hidden');
+    }
+
+    function closeVideoModal() {
+        document.getElementById('videoModal').classList.add('hidden');
+    }
+
+    function openContactModal() {
+        document.getElementById('contactModal').classList.remove('hidden');
+    }
+
+    function closeContactModal() {
+        document.getElementById('contactModal').classList.add('hidden');
+    }
+
+    // Smooth scroll
+    function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        section.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Close modals on ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeVideoModal();
+            closeContactModal();
+        }
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
