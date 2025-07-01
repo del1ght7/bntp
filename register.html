@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - БНТП</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .hero-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .step {
+            transition: all 0.3s ease;
+        }
+        .step.active {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+        .step.completed {
+            background: #10b981;
+            color: white;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen py-8">
+<!-- Background Pattern -->
+<div class="hero-pattern absolute inset-0"></div>
+
+<!-- Decorative elements -->
+<div class="absolute top-20 right-10 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+<div class="absolute bottom-20 left-10 w-64 h-64 bg-blue-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+
+<div class="relative z-10 container mx-auto px-4">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 mx-auto mb-4 gradient-bg rounded-xl flex items-center justify-center">
+                <i class="fas fa-cube text-2xl text-white"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800">Заявка на резидентство</h1>
+            <p class="text-gray-600 mt-2">Присоединяйтесь к Брестскому научно-технологическому парку</p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="flex justify-center mb-8">
+            <div class="flex items-center space-x-4">
+                <div class="step active rounded-full w-12 h-12 flex items-center justify-center font-bold">1</div>
+                <div class="w-16 h-1 bg-gray-300"></div>
+                <div class="step rounded-full w-12 h-12 flex items-center justify-center font-bold bg-gray-300">2</div>
+                <div class="w-16 h-1 bg-gray-300"></div>
+                <div class="step rounded-full w-12 h-12 flex items-center justify-center font-bold bg-gray-300">3</div>
+            </div>
+        </div>
+
+        <!-- Step Indicators -->
+        <div class="flex justify-center mb-8">
+            <div class="grid grid-cols-3 gap-8 text-center max-w-3xl w-full">
+                <div>
+                    <h3 class="font-semibold text-purple-600">Основная информация</h3>
+                    <p class="text-sm text-gray-500">Данные для входа и контакты</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-400">О компании</h3>
+                    <p class="text-sm text-gray-500">Информация о вашей деятельности</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-400">Подтверждение</h3>
+                    <p class="text-sm text-gray-500">Проверка и отправка заявки</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <form id="registerForm" class="space-y-6">
+            <!-- Step 1: Basic Information -->
+            <div id="step1" class="step-content">
+                <h2 class="text-2xl font-bold mb-6">Основная информация</h2>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-user mr-2 text-purple-600"></i>Логин для входа *
+                        </label>
+                        <input type="text" id="username" name="username" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                               placeholder="Введите желаемый логин">
+                        <p class="text-xs text-gray-500 mt-1">Будет использоваться для входа в систему</p>
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-envelope mr-2 text-purple-600"></i>Email *
+                        </label>
+                        <input type="email" id="email" name="email" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                               placeholder="company@example.com">
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-purple-600"></i>Пароль *
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" required minlength="6"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            <button type="button" onclick="togglePassword('password')" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Минимум 6 символов</p>
+                    </div>
+
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-purple-600"></i>Подтвердите пароль *
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="confirmPassword" name="confirmPassword" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            <button type="button" onclick="togglePassword('confirmPassword')" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="company" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-building mr-2 text-purple-600"></i>Название организации *
+                    </label>
+                    <input type="text" id="company" name="company" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                           placeholder="ООО 'Ваша компания'">
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="button" onclick="nextStep()" class="gradient-bg text-white px-8 py-3 rounded-lg hover:opacity-90 transition">
+                        Далее <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Company Information -->
+            <div id="step2" class="step-content hidden">
+                <h2 class="text-2xl font-bold mb-6">Информация о компании</h2>
+
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-user-tag mr-2 text-purple-600"></i>Тип заявителя *
+                    </label>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <label class="relative">
+                            <input type="radio" name="role" value="RESIDENT" required class="sr-only peer">
+                            <div class="p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 peer-checked:border-purple-500 peer-checked:bg-purple-50 transition">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-rocket text-2xl text-purple-600"></i>
+                                    <div>
+                                        <h4 class="font-semibold">Резидент технопарка</h4>
+                                        <p class="text-sm text-gray-600">Инновационная компания, желающая разместиться в технопарке</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="relative">
+                            <input type="radio" name="role" value="USER" required class="sr-only peer">
+                            <div class="p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 peer-checked:border-purple-500 peer-checked:bg-purple-50 transition">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-handshake text-2xl text-blue-600"></i>
+                                    <div>
+                                        <h4 class="font-semibold">Партнер</h4>
+                                        <p class="text-sm text-gray-600">Организация, заинтересованная в сотрудничестве</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Additional fields for residents -->
+                <div id="residentInfo" class="hidden space-y-6 p-6 bg-purple-50 rounded-lg border border-purple-200">
+                    <h3 class="text-lg font-semibold text-purple-800 flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>Дополнительная информация для резидентов
+                    </h3>
+
+                    <div>
+                        <label for="activityType" class="block text-sm font-medium text-gray-700 mb-2">
+                            Основной вид деятельности *
+                        </label>
+                        <select id="activityType" name="activityType"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            <option value="">Выберите вид деятельности</option>
+                            <option value="IT">Информационные технологии</option>
+                            <option value="BIOTECH">Биотехнологии</option>
+                            <option value="NANOTECH">Нанотехнологии</option>
+                            <option value="ENERGY">Энергетика и энергосбережение</option>
+                            <option value="MANUFACTURING">Производство и автоматизация</option>
+                            <option value="FINTECH">Финансовые технологии</option>
+                            <option value="EDUTECH">Образовательные технологии</option>
+                            <option value="MEDTECH">Медицинские технологии</option>
+                            <option value="OTHER">Другое</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                            Описание деятельности *
+                        </label>
+                        <textarea id="description" name="description" rows="4"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                  placeholder="Опишите основную деятельность вашей компании, инновационные продукты или услуги, планы развития"></textarea>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="employeeCount" class="block text-sm font-medium text-gray-700 mb-2">
+                                Количество сотрудников
+                            </label>
+                            <select id="employeeCount" name="employeeCount"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                <option value="">Выберите диапазон</option>
+                                <option value="1-5">1-5 человек</option>
+                                <option value="6-15">6-15 человек</option>
+                                <option value="16-50">16-50 человек</option>
+                                <option value="51-100">51-100 человек</option>
+                                <option value="100+">Более 100 человек</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="website" class="block text-sm font-medium text-gray-700 mb-2">
+                                Веб-сайт
+                            </label>
+                            <input type="url" id="website" name="website"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                   placeholder="https://example.com">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <button type="button" onclick="prevStep()" class="border border-gray-400 text-gray-600 px-8 py-3 rounded-lg hover:bg-gray-50 transition">
+                        <i class="fas fa-arrow-left mr-2"></i>Назад
+                    </button>
+                    <button type="button" onclick="nextStep()" class="gradient-bg text-white px-8 py-3 rounded-lg hover:opacity-90 transition">
+                        Далее <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Confirmation -->
+            <div id="step3" class="step-content hidden">
+                <h2 class="text-2xl font-bold mb-6">Подтверждение заявки</h2>
+
+                <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Проверьте введенные данные</h3>
+                    <div id="summaryData" class="space-y-3 text-sm">
+                        <!-- Summary will be filled by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <input id="terms" name="terms" type="checkbox" required
+                               class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded mt-1">
+                        <label for="terms" class="ml-3 text-sm text-gray-700">
+                            Я согласен с <a href="#" class="text-purple-600 hover:underline">условиями предоставления услуг</a>
+                            и <a href="#" class="text-purple-600 hover:underline">политикой обработки персональных данных</a> *
+                        </label>
+                    </div>
+
+                    <div class="flex items-start">
+                        <input id="dataProcessing" name="dataProcessing" type="checkbox" required
+                               class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded mt-1">
+                        <label for="dataProcessing" class="ml-3 text-sm text-gray-700">
+                            Я даю согласие на обработку персональных данных в соответствии с действующим законодательством *
+                        </label>
+                    </div>
+
+                    <div class="flex items-start">
+                        <input id="newsletter" name="newsletter" type="checkbox"
+                               class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded mt-1">
+                        <label for="newsletter" class="ml-3 text-sm text-gray-700">
+                            Я хочу получать новости и обновления о деятельности технопарка
+                        </label>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 mt-6">
+                    <div class="flex items-start">
+                        <i class="fas fa-info-circle text-blue-500 mr-3 mt-1"></i>
+                        <div class="text-sm text-blue-800">
+                            <h4 class="font-semibold mb-2">Что происходит после подачи заявки?</h4>
+                            <ul class="space-y-1">
+                                <li>• Ваша заявка будет рассмотрена экспертной комиссией в течение 30 рабочих дней</li>
+                                <li>• Мы можем запросить дополнительную информацию или документы</li>
+                                <li>• После одобрения вы получите приглашение для заключения договора</li>
+                                <li>• Администратор создаст ваш аккаунт и предоставит доступ к системе</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <button type="button" onclick="prevStep()" class="border border-gray-400 text-gray-600 px-8 py-3 rounded-lg hover:bg-gray-50 transition">
+                        <i class="fas fa-arrow-left mr-2"></i>Назад
+                    </button>
+                    <button type="submit" class="gradient-bg text-white px-8 py-3 rounded-lg hover:opacity-90 transition">
+                        <i class="fas fa-paper-plane mr-2"></i>Подать заявку
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Back to Login -->
+        <div class="mt-6 text-center">
+            <p class="text-gray-600">Уже есть аккаунт?
+                <a href="/login" class="text-purple-600 hover:text-purple-700 font-medium transition">Войти</a>
+            </p>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="mt-4 text-center">
+            <a href="/" class="text-sm text-gray-500 hover:text-gray-700 transition flex items-center justify-center">
+                <i class="fas fa-arrow-left mr-2"></i>Вернуться на главную
+            </a>
+        </div>
+
+        <!-- Message Display -->
+        <div id="message" class="mt-6 p-4 rounded-lg hidden"></div>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        updateStepIndicators();
+
+        // Add role change listener
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const residentInfo = document.getElementById('residentInfo');
+                if (this.value === 'RESIDENT') {
+                    residentInfo.classList.remove('hidden');
+                    // Make resident fields required
+                    document.getElementById('activityType').required = true;
+                    document.getElementById('description').required = true;
+                } else {
+                    residentInfo.classList.add('hidden');
+                    // Remove required attribute
+                    document.getElementById('activityType').required = false;
+                    document.getElementById('description').required = false;
+                }
+            });
+        });
+    });
+
+    function nextStep() {
+        if (validateCurrentStep()) {
+            if (currentStep < 3) {
+                document.getElementById(`step${currentStep}`).classList.add('hidden');
+                currentStep++;
+                document.getElementById(`step${currentStep}`).classList.remove('hidden');
+                updateStepIndicators();
+
+                if (currentStep === 3) {
+                    updateSummary();
+                }
+            }
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 1) {
+            document.getElementById(`step${currentStep}`).classList.add('hidden');
+            currentStep--;
+            document.getElementById(`step${currentStep}`).classList.remove('hidden');
+            updateStepIndicators();
+        }
+    }
+
+    function validateCurrentStep() {
+        const currentStepEl = document.getElementById(`step${currentStep}`);
+        const requiredFields = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
+
+        for (let field of requiredFields) {
+            if (!field.value.trim()) {
+                field.focus();
+                showMessage('Пожалуйста, заполните все обязательные поля', 'error');
+                return false;
+            }
+        }
+
+        // Additional validation for step 1
+        if (currentStep === 1) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showMessage('Пароли не совпадают', 'error');
+                return false;
+            }
+
+            if (password.length < 6) {
+                showMessage('Пароль должен содержать минимум 6 символов', 'error');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function updateStepIndicators() {
+        document.querySelectorAll('.step').forEach((step, index) => {
+            step.classList.remove('active', 'completed');
+            if (index + 1 < currentStep) {
+                step.classList.add('completed');
+            } else if (index + 1 === currentStep) {
+                step.classList.add('active');
+            }
+        });
+    }
+
+    function updateSummary() {
+        const formData = new FormData(document.getElementById('registerForm'));
+        const data = Object.fromEntries(formData.entries());
+
+        const summaryHtml = `
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <strong>Логин:</strong> ${data.username}
+                </div>
+                <div>
+                    <strong>Email:</strong> ${data.email}
+                </div>
+                <div>
+                    <strong>Компания:</strong> ${data.company}
+                </div>
+                <div>
+                    <strong>Тип заявителя:</strong> ${data.role === 'RESIDENT' ? 'Резидент технопарка' : 'Партнер'}
+                </div>
+                ${data.activityType ? `<div><strong>Вид деятельности:</strong> ${getActivityTypeName(data.activityType)}</div>` : ''}
+                ${data.employeeCount ? `<div><strong>Количество сотрудников:</strong> ${data.employeeCount}</div>` : ''}
+            </div>
+            ${data.description ? `<div class="mt-4"><strong>Описание деятельности:</strong><br>${data.description}</div>` : ''}
+        `;
+
+        document.getElementById('summaryData').innerHTML = summaryHtml;
+    }
+
+    function getActivityTypeName(value) {
+        const types = {
+            'IT': 'Информационные технологии',
+            'BIOTECH': 'Биотехнологии',
+            'NANOTECH': 'Нанотехнологии',
+            'ENERGY': 'Энергетика и энергосбережение',
+            'MANUFACTURING': 'Производство и автоматизация',
+            'FINTECH': 'Финансовые технологии',
+            'EDUTECH': 'Образовательные технологии',
+            'MEDTECH': 'Медицинские технологии',
+            'OTHER': 'Другое'
+        };
+        return types[value] || value;
+    }
+
+    function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const icon = field.nextElementSibling.querySelector('i');
+
+        if (field.type === 'password') {
+            field.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            field.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    // Form submission
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!validateCurrentStep()) {
+            return;
+        }
+
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        // Show loading state
+        const submitButton = e.target.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Отправка заявки...';
+        submitButton.disabled = true;
+
+        // Submit to API
+        fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: data.username,
+                password: data.password,
+                email: data.email,
+                company: data.company,
+                role: data.role
+            })
+        })
+            .then(response => response.text())
+            .then(result => {
+                if (result.includes('successful')) {
+                    showMessage('Заявка успешно подана! Ожидайте рассмотрения администратором. Мы свяжемся с вами в течение 30 рабочих дней.', 'success');
+                    document.getElementById('registerForm').reset();
+                    currentStep = 1;
+                    document.querySelectorAll('.step-content').forEach(step => step.classList.add('hidden'));
+                    document.getElementById('step1').classList.remove('hidden');
+                    updateStepIndicators();
+                } else {
+                    showMessage(result, 'error');
+                }
+            })
+            .catch(error => {
+                showMessage('Ошибка отправки заявки: ' + error.message, 'error');
+            })
+            .finally(() => {
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            });
+    });
+
+    function showMessage(text, type) {
+        const messageDiv = document.getElementById('message');
+        messageDiv.className = `mt-6 p-4 rounded-lg ${
+            type === 'success' ? 'bg-green-100 text-green-700 border border-green-200' :
+                type === 'error' ? 'bg-red-100 text-red-700 border border-red-200' :
+                    'bg-blue-100 text-blue-700 border border-blue-200'
+        }`;
+        messageDiv.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas ${
+            type === 'success' ? 'fa-check-circle' :
+                type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'
+        } mr-2"></i>
+                ${text}
+            </div>
+        `;
+        messageDiv.classList.remove('hidden');
+
+        // Scroll to message
+        messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Real-time password validation
+    document.getElementById('confirmPassword').addEventListener('input', function() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = this.value;
+
+        if (confirmPassword && password !== confirmPassword) {
+            this.setCustomValidity('Пароли не совпадают');
+            this.classList.add('border-red-500');
+        } else {
+            this.setCustomValidity('');
+            this.classList.remove('border-red-500');
+        }
+    });
+</script>
+</body>
+</html>

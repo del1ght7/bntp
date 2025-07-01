@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бронирование помещений - БНТП</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/locales/ru.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .room-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .room-card.selected {
+            border-color: #8b5cf6;
+            background: linear-gradient(135deg, #ede9fe 0%, #f3f4f6 100%);
+        }
+
+        .equipment-item {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 4px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .equipment-item:hover {
+            border-color: #8b5cf6;
+            background-color: #f3f4f6;
+        }
+        .equipment-item.selected {
+            border-color: #8b5cf6;
+            background-color: #ede9fe;
+        }
+
+        .step {
+            transition: all 0.3s ease;
+        }
+        .step.active {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+        .step.completed {
+            background: #10b981;
+            color: white;
+        }
+
+        .calendar-container {
+            min-height: 500px;
+        }
+
+        .fc-event {
+            cursor: pointer;
+        }
+
+        .time-slot {
+            padding: 8px 12px;
+            margin: 2px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .time-slot:hover {
+            border-color: #8b5cf6;
+            background-color: #f3f4f6;
+        }
+        .time-slot.selected {
+            border-color: #8b5cf6;
+            background-color: #ede9fe;
+        }
+        .time-slot.occupied {
+            background-color: #fecaca;
+            border-color: #dc2626;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .booking-summary {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px solid #e2e8f0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .room-image {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- Navigation -->
+<nav class="bg-white shadow-sm p-4 sticky top-0 z-40">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center text-white">
+                <i class="fas fa-cube"></i>
+            </div>
+            <h1 class="text-2xl font-bold gradient-text">БНТП</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <a href="/" class="text-gray-600 hover:text-purple-600 transition">
+                <i class="fas fa-home mr-2"></i>Главная
+            </a>
+            <a href="/login" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                <i class="fas fa-sign-in-alt mr-2"></i>Войти
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold gradient-text mb-4">Бронирование помещений</h1>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+            Забронируйте современные помещения для ваших деловых мероприятий.
+            Удобный календарь, прозрачное ценообразование и мгновенное подтверждение.
+        </p>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="flex justify-center mb-8">
+        <div class="flex items-center space-x-4">
+            <div class="step active rounded-full w-12 h-12 flex items-center justify-center font-bold">1</div>
+            <div class="w-16 h-1 bg-gray-300"></div>
+            <div class="step rounded-full w-12 h-12 flex items-center justify-center font-bold bg-gray-300">2</div>
+            <div class="w-16 h-1 bg-gray-300"></div>
+            <div class="step rounded-full w-12 h-12 flex items-center justify-center font-bold bg-gray-300">3</div>
+            <div class="w-16 h-1 bg-gray-300"></div>
+            <div class="step rounded-full w-12 h-12 flex items-center justify-center font-bold bg-gray-300">4</div>
+        </div>
+    </div>
+
+    <!-- Step Indicators -->
+    <div class="flex justify-center mb-12">
+        <div class="grid grid-cols-4 gap-8 text-center max-w-4xl w-full">
+            <div>
+                <h3 class="font-semibold text-purple-600">Выбор помещения</h3>
+                <p class="text-sm text-gray-500">Выберите подходящий тип помещения</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-400">Дата и время</h3>
+                <p class="text-sm text-gray-500">Укажите желаемые дату и время</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-400">Дополнительно</h3>
+                <p class="text-sm text-gray-500">Выберите оборудование</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-400">Контакты</h3>
+                <p class="text-sm text-gray-500">Заполните контактные данные</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 1: Room Selection -->
+    <div id="step1" class="step-content animate-fade-in-up">
+        <h2 class="text-3xl font-bold text-center mb-8">Выберите помещение</h2>
+
+        <div class="grid md:grid-cols-3 gap-8 mb-8">
+            <!-- Meeting Room -->
+            <div class="room-card bg-white rounded-2xl overflow-hidden shadow-lg" data-room="Переговорка" data-area="55" data-capacity="15" data-rate="25">
+                <div class="room-image flex items-center justify-center">
+                    <i class="fas fa-users text-6xl text-white opacity-80"></i>
+                </div>
+                <div class="p-8">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-2">Переговорка</h3>
+                        <p class="text-gray-600">Уютная комната для небольших встреч и переговоров</p>
+                    </div>
+
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Площадь:</span>
+                            <span class="font-semibold">55 м²</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Вместимость:</span>
+                            <span class="font-semibold">до 15 человек</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Стоимость:</span>
+                            <span class="font-semibold text-lg text-purple-600">25₽/час</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 mb-6 text-sm">
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Wi-Fi высокой скорости</span>
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Кондиционер</span>
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Флипчарт</span>
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Комфортная мебель</span>
+                        </div>
+                    </div>
+
+                    <button class="w-full py-3 border-2 border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition font-semibold">
+                        Выбрать помещение
+                    </button>
+                </div>
+            </div>
+
+            <!-- Conference Hall -->
+            <div class="room-card bg-white rounded-2xl overflow-hidden shadow-lg" data-room="Конференц-зал" data-area="108" data-capacity="80" data-rate="50">
+                <div class="room-image flex items-center justify-center">
+                    <i class="fas fa-chalkboard-teacher text-6xl text-white opacity-80"></i>
+                </div>
+                <div class="p-8">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-2">Конференц-зал</h3>
+                        <p class="text-gray-600">Просторный зал для конференций, семинаров и презентаций</p>
+                    </div>
+
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Площадь:</span>
+                            <span class="font-semibold">108 м²</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Вместимость:</span>
+                            <span class="font-semibold">до 80 человек</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Стоимость:</span>
+                            <span class="font-semibold text-lg text-purple-600">50₽/час</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 mb-6 text-sm">
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Проектор и экран</span>
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Звуковая система</span>
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Микрофоны</span>
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Театральная рассадка</span>
+                        </div>
+                    </div>
+
+                    <button class="w-full py-3 border-2 border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition font-semibold">
+                        Выбрать помещение
+                    </button>
+                </div>
+            </div>
+
+            <!-- Exhibition Hall -->
+            <div class="room-card bg-white rounded-2xl overflow-hidden shadow-lg" data-room="Выставочный зал" data-area="180" data-capacity="120" data-rate="75">
+                <div class="room-image flex items-center justify-center">
+                    <i class="fas fa-building text-6xl text-white opacity-80"></i>
+                </div>
+                <div class="p-8">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-2">Выставочный зал</h3>
+                        <p class="text-gray-600">Большой зал для выставок, крупных мероприятий и форумов</p>
+                    </div>
+
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Площадь:</span>
+                            <span class="font-semibold">180 м²</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Вместимость:</span>
+                            <span class="font-semibold">до 120 человек</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Стоимость:</span>
+                            <span class="font-semibold text-lg text-purple-600">75₽/час</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 mb-6 text-sm">
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Выставочные стенды</span>
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Профессиональное освещение</span>
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Система вентиляции</span>
+                        </div>
+                        <div class="flex items-center text-green-600">
+                            <i class="fas fa-check mr-2"></i>
+                            <span>Гибкая планировка</span>
+                        </div>
+                    </div>
+
+                    <button class="w-full py-3 border-2 border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition font-semibold">
+                        Выбрать помещение
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button id="nextStep1" class="gradient-bg text-white px-12 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                Далее <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 2: Date & Time Selection -->
+    <div id="step2" class="step-content hidden">
+        <h2 class="text-3xl font-bold text-center mb-8">Выберите дату и время</h2>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Календарь занятости</h3>
+                    <div class="calendar-container">
+                        <div id="bookingCalendar"></div>
+                    </div>
+
+                    <div class="mt-4 flex flex-wrap gap-4 text-sm">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-green-200 border border-green-500 rounded mr-2"></div>
+                            <span>Свободно</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-red-200 border border-red-500 rounded mr-2"></div>
+                            <span>Занято</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-blue-200 border border-blue-500 rounded mr-2"></div>
+                            <span>Выбранное время</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="bg-white rounded-2xl p-6 shadow-lg sticky top-24">
+                    <h3 class="text-xl font-semibold mb-4">Детали бронирования</h3>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Дата</label>
+                            <input type="date" id="selectedDate" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Начало</label>
+                                <select id="startTime" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="">Время</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Окончание</label>
+                                <select id="endTime" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="">Время</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-semibold mb-2">Выбранное помещение</h4>
+                            <p id="selectedRoomName" class="text-gray-600">-</p>
+                            <p id="selectedRoomDetails" class="text-sm text-gray-500">-</p>
+                        </div>
+
+                        <div id="timeCalculation" class="bg-purple-50 p-4 rounded-lg hidden">
+                            <div class="flex justify-between items-center">
+                                <span>Продолжительность:</span>
+                                <span id="duration" class="font-semibold">-</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <span>Стоимость:</span>
+                                <span id="basicCost" class="font-semibold text-purple-600">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-8">
+            <div class="flex justify-center space-x-4">
+                <button id="prevStep2" class="border border-gray-400 text-gray-600 px-8 py-3 rounded-lg hover:bg-gray-50 transition">
+                    <i class="fas fa-arrow-left mr-2"></i>Назад
+                </button>
+                <button id="nextStep2" class="gradient-bg text-white px-12 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Далее <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: Equipment Selection -->
+    <div id="step3" class="step-content hidden">
+        <h2 class="text-3xl font-bold text-center mb-8">Дополнительное оборудование</h2>
+
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+                <h3 class="text-xl font-semibold mb-6">Выберите необходимое оборудование</h3>
+
+                <div class="grid md:grid-cols-2 gap-4" id="equipmentList">
+                    <!-- Equipment items will be loaded here -->
+                </div>
+
+                <div class="mt-8 bg-gray-50 p-6 rounded-lg">
+                    <h4 class="font-semibold mb-4">Дополнительная информация</h4>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Цель мероприятия</label>
+                        <input type="text" id="eventPurpose" placeholder="Например: Деловая встреча, презентация продукта"
+                               class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                </div>
+
+                <div id="equipmentCost" class="mt-6 bg-purple-50 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2">Расчет стоимости</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>Аренда помещения:</span>
+                            <span id="roomCostDisplay">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Дополнительное оборудование:</span>
+                            <span id="equipmentCostDisplay">0₽</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between font-semibold text-lg">
+                            <span>Итого:</span>
+                            <span id="totalCostDisplay" class="text-purple-600">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-8">
+            <div class="flex justify-center space-x-4">
+                <button id="prevStep3" class="border border-gray-400 text-gray-600 px-8 py-3 rounded-lg hover:bg-gray-50 transition">
+                    <i class="fas fa-arrow-left mr-2"></i>Назад
+                </button>
+                <button id="nextStep3" class="gradient-bg text-white px-12 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition">
+                    Далее <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4: Contact Information -->
+    <div id="step4" class="step-content hidden">
+        <h2 class="text-3xl font-bold text-center mb-8">Контактная информация</h2>
+
+        <div class="max-w-4xl mx-auto grid lg:grid-cols-2 gap-8">
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+                <h3 class="text-xl font-semibold mb-6">Ваши данные</h3>
+                <p class="text-sm text-gray-600 mb-6">Все поля, отмеченные звездочкой (*), обязательны для заполнения</p>
+
+                <form id="contactForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Имя и фамилия *</label>
+                        <input type="text" id="guestName" required
+                               class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                               placeholder="Введите ваше полное имя">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Номер телефона *</label>
+                        <input type="tel" id="guestPhone" required
+                               class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                               placeholder="+375 (29) 123-45-67">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Адрес электронной почты *</label>
+                        <input type="email" id="guestEmail" required
+                               class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                               placeholder="example@email.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Организация</label>
+                        <input type="text" id="organization"
+                               class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                               placeholder="Название вашей организации (необязательно)">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Дополнительные пожелания</label>
+                        <textarea id="additionalRequests" rows="3"
+                                  class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                  placeholder="Укажите любые дополнительные требования или пожелания"></textarea>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="agreeTerms" required class="mr-3">
+                        <label for="agreeTerms" class="text-sm text-gray-600">
+                            Я согласен с <a href="#" class="text-purple-600 hover:underline">условиями использования</a>
+                            и <a href="#" class="text-purple-600 hover:underline">политикой обработки персональных данных</a> *
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div>
+                <div class="booking-summary rounded-2xl p-8 shadow-lg sticky top-24">
+                    <h3 class="text-xl font-semibold mb-6">Итоговая информация</h3>
+
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Помещение</h4>
+                            <p id="summaryRoom" class="text-gray-600">-</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Дата и время</h4>
+                            <p id="summaryDateTime" class="text-gray-600">-</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Продолжительность</h4>
+                            <p id="summaryDuration" class="text-gray-600">-</p>
+                        </div>
+
+                        <div id="summaryEquipmentSection" class="hidden">
+                            <h4 class="font-semibold text-gray-800">Дополнительное оборудование</h4>
+                            <ul id="summaryEquipment" class="text-gray-600 text-sm">
+                                <!-- Selected equipment will be listed here -->
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Цель мероприятия</h4>
+                            <p id="summaryPurpose" class="text-gray-600">-</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4">
+                        <div class="flex justify-between items-center text-lg font-semibold">
+                            <span>Общая стоимость:</span>
+                            <span id="summaryTotal" class="text-2xl text-purple-600">-</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">НДС включен</p>
+                    </div>
+
+                    <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                        <h4 class="font-semibold text-blue-800 mb-2">Что дальше?</h4>
+                        <ul class="text-sm text-blue-700 space-y-1">
+                            <li>• Ваша заявка будет рассмотрена в течение 2 часов</li>
+                            <li>• Мы свяжемся с вами для подтверждения</li>
+                            <li>• После подтверждения вы получите договор</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-8">
+            <div class="flex justify-center space-x-4">
+                <button id="prevStep4" class="border border-gray-400 text-gray-600 px-8 py-3 rounded-lg hover:bg-gray-50 transition">
+                    <i class="fas fa-arrow-left mr-2"></i>Назад
+                </button>
+                <button id="submitBooking" class="gradient-bg text-white px-12 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition">
+                    <i class="fas fa-check mr-2"></i>Подтвердить бронирование
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="step-content hidden text-center">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-2xl p-12 shadow-lg">
+                <div class="w-24 h-24 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-check text-4xl text-green-600"></i>
+                </div>
+
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Бронирование отправлено!</h2>
+                <p class="text-gray-600 mb-6">
+                    Ваша заявка на бронирование успешно отправлена. Мы свяжемся с вами в течение 2 часов
+                    для подтверждения и обсуждения деталей.
+                </p>
+
+                <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                    <h3 class="font-semibold mb-2">Что дальше?</h3>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Проверка доступности помещения</li>
+                        <li>• Подтверждение бронирования по телефону</li>
+                        <li>• Отправка договора и счета на оплату</li>
+                        <li>• Получение инструкций по посещению</li>
+                    </ul>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                    <h4 class="font-semibold mb-2">Контакты для связи</h4>
+                    <div class="space-y-1 text-sm text-gray-600">
+                        <p><i class="fas fa-phone mr-2"></i>+375 (162) 20-15-60</p>
+                        <p><i class="fas fa-envelope mr-2"></i>booking@bntp.by</p>
+                        <p><i class="fas fa-clock mr-2"></i>Пн-Пт: 9:00 - 18:00</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-center space-x-4">
+                    <button onclick="window.location.href='/'" class="border border-gray-400 text-gray-600 px-8 py-3 rounded-lg hover:bg-gray-50 transition">
+                        На главную
+                    </button>
+                    <button onclick="location.reload()" class="gradient-bg text-white px-8 py-3 rounded-lg hover:opacity-90 transition">
+                        Новое бронирование
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Global variables
+    let currentStep = 1;
+    let selectedRoom = null;
+    let selectedDate = null;
+    let selectedStartTime = null;
+    let selectedEndTime = null;
+    let selectedEquipment = [];
+    let roomTypes = [];
+    let equipmentTypes = [];
+    let calendar = null;
+    let occupiedSlots = [];
+
+    // Equipment data
+    const equipmentData = [
+        { name: 'INTERACTIVE_SCREEN', displayName: 'Интерактивный экран', dailyRate: 50.0 },
+        { name: 'PROJECTOR', displayName: 'Проектор', dailyRate: 30.0 },
+        { name: 'AUDIO_SYSTEM', displayName: 'Акустическая система/микрофоны', dailyRate: 40.0 },
+        { name: 'CONFERENCE_CAMERA', displayName: 'Конференц-камера (Zoom)', dailyRate: 60.0 },
+        { name: 'FLIPCHART', displayName: 'Флипчарт + маркеры', dailyRate: 15.0 },
+        { name: 'THERMOPOT_4L', displayName: 'Термопот (4л)', dailyRate: 20.0 },
+        { name: 'THERMOPOT_10L', displayName: 'Термопот (10л)', dailyRate: 35.0 },
+        { name: 'VIDEO_CAMERA', displayName: 'Видеокамера Sony PXW-Z150', dailyRate: 100.0 }
+    ];
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeRoomSelection();
+        initializeTimeSelectors();
+        initializeEquipmentList();
+        loadRoomTypes();
+        setupEventListeners();
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('selectedDate').min = today;
+    });
+
+    function loadRoomTypes() {
+        fetch('/api/room-types')
+            .then(response => response.json())
+            .then(data => {
+                roomTypes = data;
+                console.log('Room types loaded:', roomTypes);
+            })
+            .catch(error => {
+                console.error('Error loading room types:', error);
+                // Fallback data
+                roomTypes = [
+                    { name: 'Переговорка', area: 55, capacity: 15, hourlyRate: 25.0 },
+                    { name: 'Конференц-зал', area: 108, capacity: 80, hourlyRate: 50.0 },
+                    { name: 'Выставочный зал', area: 180, capacity: 120, hourlyRate: 75.0 }
+                ];
+            });
+    }
+
+    function initializeRoomSelection() {
+        const roomCards = document.querySelectorAll('.room-card');
+        roomCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove selection from other cards
+                roomCards.forEach(c => {
+                    c.classList.remove('selected');
+                    const button = c.querySelector('button');
+                    button.textContent = 'Выбрать помещение';
+                    button.classList.remove('bg-purple-600', 'text-white');
+                    button.classList.add('border-purple-600', 'text-purple-600');
+                });
+
+                // Select this card
+                this.classList.add('selected');
+
+                // Store selected room data
+                selectedRoom = {
+                    type: this.dataset.room,
+                    name: this.dataset.room,
+                    area: parseInt(this.dataset.area),
+                    capacity: parseInt(this.dataset.capacity),
+                    rate: parseFloat(this.dataset.rate)
+                };
+
+                // Enable next button
+                document.getElementById('nextStep1').disabled = false;
+
+                // Update button text
+                const button = this.querySelector('button');
+                button.textContent = 'Выбрано ✓';
+                button.classList.remove('border-purple-600', 'text-purple-600');
+                button.classList.add('bg-purple-600', 'text-white');
+            });
+        });
+    }
+
+    function initializeTimeSelectors() {
+        const startTimeSelect = document.getElementById('startTime');
+        const endTimeSelect = document.getElementById('endTime');
+
+        // Generate time options from 8:00 to 20:00
+        for (let hour = 8; hour <= 20; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+
+                const startOption = document.createElement('option');
+                startOption.value = timeString;
+                startOption.textContent = timeString;
+                startTimeSelect.appendChild(startOption);
+
+                if (hour < 20 || (hour === 20 && minute === 0)) {
+                    const endOption = document.createElement('option');
+                    endOption.value = timeString;
+                    endOption.textContent = timeString;
+                    endTimeSelect.appendChild(endOption);
+                }
+            }
+        }
+
+        // Add event listeners
+        startTimeSelect.addEventListener('change', updateEndTimeOptions);
+        endTimeSelect.addEventListener('change', calculateCost);
+        document.getElementById('selectedDate').addEventListener('change', function() {
+            selectedDate = this.value;
+            loadOccupiedSlots();
+            validateDateTime();
+        });
+    }
+
+    function updateEndTimeOptions() {
+        const startTime = document.getElementById('startTime').value;
+        const endTimeSelect = document.getElementById('endTime');
+
+        selectedStartTime = startTime;
+
+        // Clear end time options
+        endTimeSelect.innerHTML = '<option value="">Время</option>';
+
+        if (!startTime) return;
+
+        // Add options that are after start time
+        const startHour = parseInt(startTime.split(':')[0]);
+        const startMinute = parseInt(startTime.split(':')[1]);
+
+        for (let hour = startHour; hour <= 20; hour++) {
+            const startMinuteForHour = (hour === startHour) ? startMinute + 30 : 0;
+
+            for (let minute = startMinuteForHour; minute < 60; minute += 30) {
+                if (hour === 20 && minute > 0) break;
+
+                const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+
+                const option = document.createElement('option');
+                option.value = timeString;
+                option.textContent = timeString;
+                endTimeSelect.appendChild(option);
+            }
+        }
+
+        validateDateTime();
+    }
+
+    function validateDateTime() {
+        const date = document.getElementById('selectedDate').value;
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+
+        const nextButton = document.getElementById('nextStep2');
+
+        if (date && startTime && endTime) {
+            selectedDate = date;
+            selectedStartTime = startTime;
+            selectedEndTime = endTime;
+
+            calculateCost();
+            nextButton.disabled = false;
+        } else {
+            nextButton.disabled = true;
+        }
+    }
+
+    function calculateCost() {
+        if (!selectedRoom || !selectedStartTime || !selectedEndTime) return;
+
+        const start = new Date(`2000-01-01 ${selectedStartTime}`);
+        const end = new Date(`2000-01-01 ${selectedEndTime}`);
+        const durationMs = end - start;
+        const durationHours = durationMs / (1000 * 60 * 60);
+
+        const roomCost = selectedRoom.rate * durationHours;
+        const equipmentCost = selectedEquipment.reduce((total, eq) => total + eq.dailyRate, 0);
+        const totalCost = roomCost + equipmentCost;
+
+        // Update duration display
+        const hours = Math.floor(durationHours);
+        const minutes = (durationHours % 1) * 60;
+        const durationText = hours > 0 ?
+            `${hours}ч ${minutes > 0 ? Math.round(minutes) + 'мин' : ''}` :
+            `${Math.round(minutes)}мин`;
+
+        document.getElementById('duration').textContent = durationText;
+        document.getElementById('basicCost').textContent = `${roomCost.toFixed(2)}₽`;
+        document.getElementById('timeCalculation').classList.remove('hidden');
+
+        // Update equipment cost display if on step 3 or later
+        if (currentStep >= 3) {
+            document.getElementById('roomCostDisplay').textContent = `${roomCost.toFixed(2)}₽`;
+            document.getElementById('equipmentCostDisplay').textContent = `${equipmentCost.toFixed(2)}₽`;
+            document.getElementById('totalCostDisplay').textContent = `${totalCost.toFixed(2)}₽`;
+        }
+
+        // Update summary
+        updateSummary();
+    }
+
+    function initializeEquipmentList() {
+        const container = document.getElementById('equipmentList');
+
+        equipmentData.forEach(equipment => {
+            const div = document.createElement('div');
+            div.className = 'equipment-item';
+            div.innerHTML = `
+                <label class="flex items-center cursor-pointer">
+                    <input type="checkbox" name="equipment" value="${equipment.name}" class="mr-3" data-rate="${equipment.dailyRate}">
+                    <div class="flex-1">
+                        <span class="font-medium">${equipment.displayName}</span>
+                        <div class="text-sm text-gray-500">${equipment.dailyRate}₽/день</div>
+                    </div>
+                </label>
+            `;
+            container.appendChild(div);
+
+            // Add click handler for visual selection
+            div.addEventListener('click', function(e) {
+                if (e.target.type !== 'checkbox') {
+                    const checkbox = div.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    checkbox.dispatchEvent(new Event('change'));
+                }
+            });
+
+            // Add change listener to checkbox
+            const checkbox = div.querySelector('input[type="checkbox"]');
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    div.classList.add('selected');
+                    selectedEquipment.push({
+                        name: equipment.name,
+                        displayName: equipment.displayName,
+                        dailyRate: equipment.dailyRate
+                    });
+                } else {
+                    div.classList.remove('selected');
+                    selectedEquipment = selectedEquipment.filter(eq => eq.name !== equipment.name);
+                }
+                calculateCost();
+            });
+        });
+    }
+
+    function loadOccupiedSlots() {
+        if (!selectedRoom || !selectedDate) return;
+
+        const startDate = new Date(selectedDate);
+        const endDate = new Date(selectedDate);
+        endDate.setDate(endDate.getDate() + 1);
+
+        const roomTypeName = selectedRoom.name;
+        const startStr = startDate.toISOString();
+        const endStr = endDate.toISOString();
+
+        fetch(`/api/room-bookings/${roomTypeName}?start=${startStr}&end=${endStr}`)
+            .then(response => response.json())
+            .then(data => {
+                occupiedSlots = data.filter(booking =>
+                    booking.status === 'APPROVED' || booking.status === 'PENDING'
+                );
+
+                if (calendar) {
+                    calendar.removeAllEvents();
+                    calendar.addEventSource(occupiedSlots.map(booking => ({
+                        title: 'Занято',
+                        start: booking.startTime,
+                        end: booking.endTime,
+                        backgroundColor: '#dc2626',
+                        borderColor: '#dc2626'
+                    })));
+                }
+            })
+            .catch(error => {
+                console.error('Error loading occupied slots:', error);
+                occupiedSlots = [];
+            });
+    }
+
+    function initializeCalendar() {
+        const calendarEl = document.getElementById('bookingCalendar');
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            locale: 'ru',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            slotMinTime: '08:00:00',
+            slotMaxTime: '20:00:00',
+            businessHours: {
+                daysOfWeek: [1, 2, 3, 4, 5, 6],
+                startTime: '09:00',
+                endTime: '18:00'
+            },
+            selectable: true,
+            selectMirror: true,
+            select: function(arg) {
+                const startDate = arg.start.toISOString().split('T')[0];
+                const startTime = arg.start.toTimeString().slice(0, 5);
+                const endTime = arg.end.toTimeString().slice(0, 5);
+
+                document.getElementById('selectedDate').value = startDate;
+                document.getElementById('startTime').value = startTime;
+
+                updateEndTimeOptions();
+
+                // Set end time
+                setTimeout(() => {
+                    document.getElementById('endTime').value = endTime;
+                    validateDateTime();
+                }, 100);
+            },
+            eventSources: []
+        });
+        calendar.render();
+    }
+
+    function setupEventListeners() {
+        // Step navigation
+        document.getElementById('nextStep1').addEventListener('click', () => goToStep(2));
+        document.getElementById('nextStep2').addEventListener('click', () => goToStep(3));
+        document.getElementById('nextStep3').addEventListener('click', () => goToStep(4));
+
+        document.getElementById('prevStep2').addEventListener('click', () => goToStep(1));
+        document.getElementById('prevStep3').addEventListener('click', () => goToStep(2));
+        document.getElementById('prevStep4').addEventListener('click', () => goToStep(3));
+
+        // Form submission
+        document.getElementById('submitBooking').addEventListener('click', submitBooking);
+
+        // Purpose field
+        document.getElementById('eventPurpose').addEventListener('input', updateSummary);
+    }
+
+    function goToStep(step) {
+        // Hide current step
+        document.getElementById(`step${currentStep}`).classList.add('hidden');
+
+        // Update step indicators
+        document.querySelectorAll('.step').forEach((stepEl, index) => {
+            stepEl.classList.remove('active', 'completed');
+            if (index + 1 < step) {
+                stepEl.classList.add('completed');
+            } else if (index + 1 === step) {
+                stepEl.classList.add('active');
+            }
+        });
+
+        // Show new step
+        document.getElementById(`step${step}`).classList.remove('hidden');
+        document.getElementById(`step${step}`).classList.add('animate-fade-in-up');
+
+        currentStep = step;
+
+        // Initialize step-specific functionality
+        if (step === 2) {
+            updateRoomDetails();
+            initializeCalendar();
+        } else if (step === 3) {
+            calculateCost();
+        } else if (step === 4) {
+            updateSummary();
+        }
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateRoomDetails() {
+        if (selectedRoom) {
+            document.getElementById('selectedRoomName').textContent = selectedRoom.name;
+            document.getElementById('selectedRoomDetails').textContent =
+                `${selectedRoom.area}м², до ${selectedRoom.capacity} человек, ${selectedRoom.rate}₽/час`;
+        }
+    }
+
+    function updateSummary() {
+        if (!selectedRoom) return;
+
+        // Room
+        document.getElementById('summaryRoom').textContent =
+            `${selectedRoom.name} (${selectedRoom.area}м², до ${selectedRoom.capacity} человек)`;
+
+        // Date and time
+        if (selectedDate && selectedStartTime && selectedEndTime) {
+            const date = new Date(selectedDate).toLocaleDateString('ru-RU');
+            document.getElementById('summaryDateTime').textContent =
+                `${date}, ${selectedStartTime} - ${selectedEndTime}`;
+
+            // Duration
+            const start = new Date(`2000-01-01 ${selectedStartTime}`);
+            const end = new Date(`2000-01-01 ${selectedEndTime}`);
+            const durationMs = end - start;
+            const durationHours = durationMs / (1000 * 60 * 60);
+            const hours = Math.floor(durationHours);
+            const minutes = (durationHours % 1) * 60;
+            const durationText = hours > 0 ?
+                `${hours}ч ${minutes > 0 ? Math.round(minutes) + 'мин' : ''}` :
+                `${Math.round(minutes)}мин`;
+            document.getElementById('summaryDuration').textContent = durationText;
+        }
+
+        // Equipment
+        if (selectedEquipment.length > 0) {
+            const equipmentList = document.getElementById('summaryEquipment');
+            equipmentList.innerHTML = '';
+            selectedEquipment.forEach(eq => {
+                const li = document.createElement('li');
+                li.textContent = `• ${eq.displayName} (${eq.dailyRate}₽/день)`;
+                equipmentList.appendChild(li);
+            });
+            document.getElementById('summaryEquipmentSection').classList.remove('hidden');
+        } else {
+            document.getElementById('summaryEquipmentSection').classList.add('hidden');
+        }
+
+        // Purpose
+        const purpose = document.getElementById('eventPurpose')?.value || '-';
+        document.getElementById('summaryPurpose').textContent = purpose;
+
+        // Total cost
+        if (selectedStartTime && selectedEndTime) {
+            const start = new Date(`2000-01-01 ${selectedStartTime}`);
+            const end = new Date(`2000-01-01 ${selectedEndTime}`);
+            const durationHours = (end - start) / (1000 * 60 * 60);
+            const roomCost = selectedRoom.rate * durationHours;
+            const equipmentCost = selectedEquipment.reduce((total, eq) => total + eq.dailyRate, 0);
+            const totalCost = roomCost + equipmentCost;
+
+            document.getElementById('summaryTotal').textContent = `${totalCost.toFixed(2)}₽`;
+        }
+    }
+
+    function submitBooking() {
+        // Validate form
+        const form = document.getElementById('contactForm');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        // Collect form data
+        const formData = {
+            roomTypeName: selectedRoom.name,
+            startTime: `${selectedDate}T${selectedStartTime}:00`,
+            endTime: `${selectedDate}T${selectedEndTime}:00`,
+            purpose: document.getElementById('eventPurpose').value,
+            guestName: document.getElementById('guestName').value,
+            guestPhone: document.getElementById('guestPhone').value,
+            guestEmail: document.getElementById('guestEmail').value,
+            selectedEquipment: selectedEquipment.map(eq => eq.name)
+        };
+
+        // Show loading state
+        const submitButton = document.getElementById('submitBooking');
+        const originalText = submitButton.innerHTML;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Отправка...';
+        submitButton.disabled = true;
+
+        // Submit to API
+        fetch('/api/booking', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Ошибка при отправке заявки');
+                }
+            })
+            .then(data => {
+                // Show success message
+                document.getElementById('step4').classList.add('hidden');
+                document.getElementById('successMessage').classList.remove('hidden');
+                document.getElementById('successMessage').classList.add('animate-fade-in-up');
+            })
+            .catch(error => {
+                console.error('Error submitting booking:', error);
+                alert('Произошла ошибка при отправке заявки. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.');
+            })
+            .finally(() => {
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            });
+    }
+</script>
+
+</body>
+</html>
